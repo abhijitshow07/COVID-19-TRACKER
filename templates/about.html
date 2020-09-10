@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>About | Our Team</title>
+    <link rel = "icon" href = "../static/img/corona.png" type = "image/x-icon">
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-167172502-2"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-167172502-2');
+    </script>
+
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
+
+    <link href='https://fonts.googleapis.com/css?family=Courgette' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Autour One' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Inder' rel='stylesheet'>
+
+    <link rel="stylesheet" media="screen" href="../static/css/style.css">
+
+    <nav class="navbar navbar-light" id="header-nav">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#"><img src="https://www.klyuniv.ac.in/images/KU_LOGO_png22.jpg"></a>
+            <h1 style="color:#171280;">ABOUT</h1>
+        </div>
+        <div class="container-fluid" id="depatment">
+            <a class="navbar-brand" href="#"></a>
+            <h5 align="right">DEPT. OF STATISTICS, UNIVERSITY OF KALYANI</h5>
+        </div>
+    </nav>
+    <nav class="nav navbar navbar-right navbar-expand-lg navbar-light bg-light sticky-top" id="top_nav">
+      <a class="navbar-brand" href="/" style="font-weight: bold;">COVID-19 TRACKER</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav container">
+            <a class="nav-item nav-link" href="/">Home</a>
+            <a class="nav-item nav-link"  href="/india" target="_blank">India Tracker</a>
+            <li><a class="nav-item nav-link"  href="/index_graph">Graphs</a></li>
+            <a class="nav-item nav-link" href="/index_sentiment">Sentiment Analysis</a>
+            <a class="nav-item nav-link"  href="/index_news">News</a>
+            <a class="nav-item nav-link"  href="/index_historical">Historical Data</a>
+            <a class="nav-item nav-link"  href="/index_predictions">Predictions</a>
+            <a class="nav-item nav-link active" href="/about" id="nav_element">About<span class="sr-only">(current)</span></a>
+        </div>
+      </div>
+    </nav>
+</head>
+
+<body>
+
+<div class="spinner-wrapper">
+    <div class="spinner"></div>
+</div>
+
+<div id="progressbar"></div>
+<div id="scrollPath"></div>
+<header>
+    <div id="overlay_header">
+        <span class="overlay"></span>
+    </div>
+    <div class="overlay" id="particles-js"></div>
+    <video playsinline="playsinline" autoplay="autoplay" muted="muted" loop="loop">
+      <source src="../static/img/earth.mp4" type="video/mp4">
+    </video>
+</header>
+
+<!-- typed-JS -->
+<script src="../static/js/typed.js"></script>
+<script>
+    var options = {
+    strings: ['Covid-19 Tracker','About Our Team', 'About Our ^700 Project'],
+    smartBackspace: true,
+    loop: true,
+    typeSpeed: 100,
+    backSpeed: 50
+}
+    var typed = new Typed('.overlay', options);
+</script>
+
+<!-- count particles -->
+<div class="count-particles">
+    <span class="js-count-particles">--</span> particles
+</div>
+
+<script src="../static/js/particles.js"></script>
+<script src="../static/js/app.js"></script>
+
+<script src="../static/js/stats.js"></script>
+<script>
+  var count_particles, stats, update;
+  stats = new Stats;
+  stats.setMode(0);
+  stats.domElement.style.position = 'absolute';
+  stats.domElement.style.left = '0px';
+  stats.domElement.style.top = '0px';
+  document.body.appendChild(stats.domElement);
+  count_particles = document.querySelector('.js-count-particles');
+  update = function() {
+    stats.begin();
+    stats.end();
+    if (window.pJSDom[0].pJS.particles && window.pJSDom[0].pJS.particles.array) {
+      count_particles.innerText = window.pJSDom[0].pJS.particles.array.length;
+    }
+    requestAnimationFrame(update);
+  };
+  requestAnimationFrame(update);
+</script>
+
+<section id = "team">
+    <div class = "container my-3 py-3 text-center">
+        <div class="row mb-5">
+            <div class="col">
+                <h1>Our Team</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <img src="../static/img/abhijit.jpg" alt="" class="img-fluid rounded-circle w-50 mb-100" id="dp">
+                        <h1>Abhijit Show</h1>
+                        <h5>Department of Statistics</h5>
+                        <h5>University of Kalyani</h5>
+                        <br>
+                        <div class="d-flex flex-row justify-content-center">
+                             <div class="p-4">
+                            <a href="https://www.instagram.com/abhijitshow07/" target="_blank">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                        </div>
+                        <div class="p-4">
+                            <a href="#">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                        </div>
+                        <div class="p-4">
+                            <a href="https://www.linkedin.com/in/abhijit-show-68a767191/" target="_blank">
+                                <i class="fab fa-linkedin"></i>
+                            </a>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <img src="../static/img/sayan.jpg" alt="" class="img-fluid rounded-circle w-50 mb-100" id="dp">
+                        <h1>Sayan Guha Roy</h1>
+                        <h5>Department of Statistics</h5>
+                        <h5>University of Kalyani</h5>
+                        <br>
+                        <div class="d-flex flex-row justify-content-center">
+                             <div class="p-4">
+                            <a href="https://www.instagram.com/sayan_guha_roy/" target="_blank">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                        </div>
+                        <div class="p-4">
+                            <a href="#">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                        </div>
+                        <div class="p-4">
+                            <a href="https://www.linkedin.com/in/sayan-guha-roy-99b761191/" target="_blank">
+                                <i class="fab fa-linkedin"></i>
+                            </a>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="pimg1">
+    <div class="ptext">
+        <span class="border">
+            Covid 19 Tracker
+        </span>
+    </div>
+</div>
+
+<section class="section section-dark">
+    <h2>Project Description</h2>
+    <p>Covid-19 has put the world to a standstill.Doctors,healthcare workers and personnel of many other essential services are fighting at the frontline to tackle this global pandemic.Although we are not fighting the battle at the frontline, as students of statistics this is our humble attempt at partaking in the struggle.</p>
+    <p>Here we have displayed the data from the world as a whole and also country wise.The data is categorised into three componenets: <strong>confirmed cases, deaths and recovered</strong>. The values are given for both daily and cumulative type.We have tried our best to keep the display simple yet visually appealing. We have used line charts and pie charts and also an exquisite race chart for display.All the above mentioned charts are interactive and are customized to give the user a clear idea of the intended meaning of the values as all the the categories are separated by different colours,this not only made the graphs more appealing to the eyes but also helped in distinguishing different aspects. There are two sections dedicated to graphs, one for India and the other for the entire world, graphs for India are under <strong>Graphs</strong> under <strong>India Tracker</strong> and those for the world are under <strong>Graphs</strong> under <strong>Home</strong>. The entire site is designed to make it as user friendly as possible. Our source for global data is Johns Hopkins University, to access the data <a href="https://github.com/CSSEGISandData/COVID-19" target="_blank">click here</a> and to access the data for India <a href="https://covid19india.org/" target="_blank">click here</a>.</p>
+    <p>We didn't just stop at displaying the data but went ahead and made predictions for values of <strong>total confirmed cases,deaths and recovered</strong> for both India and the world. We obtained our predictions by using a Facebook Prophet model.Facebook Prophet is an excellent time series model developed by Facebook. It is fast and simple, it also automatically takes into account the crucial time points in the data provided. Using this model we have obtained appreciabe acccuracy in India predictions and excellent accuracy in world predictions.The predictions are displayed under <strong>Predictions</strong>.</p>
+    <p>Our joys would know no bounds if our humble effort comes of any use to anyone battling this global pandemic. It is our utmost desire that we overcome this sitution with unity and fraternity.</p>
+</section>
+
+<div class="pimg2">
+    <div class="ptext">
+        <span class="border">
+            Facebook Prophet
+        </span>
+    </div>
+</div>
+
+<section class="section section-dark">
+    <h2>Predictions Using Facebook Prophet</h2>
+    <p>Forecasting is a data science task that is central to many activities within an organization. For instance, large organizations like Facebook must engage in capacity planning to efficiently allocate scarce resources and goal setting in order to measure performance relative to a baseline. Producing high quality forecasts is not an easy problem for either machines or for most analysts. We have observed two main themes in the practice of creating a variety of business forecasts:<br><br>
+        a) Completely automatic forecasting techniques can be brittle and they are often too inflexible to incorporate useful assumptions or heuristics.<br>
+        b) Analysts who can produce high quality forecasts are quite rare because forecasting is a specialized data science skill requiring substantial experience.<br><br>
+        The result of these themes is that the demand for high quality forecasts often far outstrips the pace at which analysts can produce them. This observation is the motivation for our work building Prophet: we want to make it easier for experts and non-experts to make high quality forecasts that keep up with demand.<br><br>
+        The typical considerations that “scale” implies, computation and storage, aren’t as much of a concern for forecasting. We have found the computational and infrastructure problems of forecasting a large number of time series to be relatively straightforward — typically these fitting procedures parallelize quite easily and forecasts are not difficult to store in relational databases such as MySQL or data warehouses such as Hive.<br><br>
+        The problems of scale we have observed in practice involve the complexity introduced by the variety of forecasting problems and building trust in a large number of forecasts once they have been produced. Prophet has been a key piece to improving Facebook’s ability to create a large number of trustworthy forecasts used for decision-making and even in product features.</p>
+</section>
+
+<div class="pimg3">
+    <div class="ptext">
+        <span class="border">
+            Sentiment Analysis
+        </span>
+    </div>
+</div>
+
+<section class="section section-dark">
+    <h2>A Brief Description of Sentiment Analysis</h2>
+    <p>Sentiment Analysis is the process of determining whether a piece of writing is positive, negative or neutral. A sentiment analysis system for text analysis combines natural language processing (NLP) and machine learning techniques to assign weighted sentiment scores to the entities, topics, themes and categories within a sentence or phrase.</p>
+    <h2>How we used Sentiment Analysis</h2>
+    <p>We used sentiment analysis to determine the sentiment of tweets regarding Covid-19. We fetched live tweets from <strong>Twitter</strong> and categorised the tweets into three sentiments <strong>Positive,Negative and Neutral</strong> and displayed it in an attractive manner.</p>
+</section>
+
+<div class="pimg4">
+    <div class="ptext">
+        <span class="border">
+            Historical Data
+        </span>
+    </div>
+</div>
+
+<section class="section section-dark">
+    <h2>Historical Data</h2>
+    <p>Under the section <strong>Historical Data</strong> one can see the historical data of <strong>cumulative confirmed cases,deaths and recoveries</strong> of any country of their choice, in the selection menu instead of choosing any particular country one can choose world as well, upon choosing that the historical data of the entire world will be displayed. At the top of the section there is an unique animation, playing which will show the effect of Covid-19 worldwide.</p>
+</section>
+
+<div class="pimg5">
+    <div class="ptext">
+        <span class="border">
+            Graphs
+        </span>
+    </div>
+</div>
+
+<section class="section section-dark">
+    <h2>Graphs used by US</h2>
+    <p>Under the section <strong>Graphs</strong> for both the world and India there is an exquisite race chart. In case of world the race chart shows the gardual change in the position of countries regarding <strong>total confirmed cases</strong>, in case of India countries are replaced by Indian states. Later oon in the section we have used several different types of graphs to diaplay data.</p>
+</section>
+
+<div class="pimg6">
+    <div class="ptext">
+        <span class="border">
+            News
+        </span>
+    </div>
+</div>
+
+<section class="section section-dark">
+    <h2>News</h2>
+    <p>Under the <strong>News</strong> section for both World and India we have showcased trending news regrading Covid-19. In our site the news are shown in brief manner but links are provided for the entire articles.</p>
+</section>
+
+</body>
+</html>
+
+<script>
+$(document).ready(function() {
+    //Preloader
+    preloaderFadeOutTime = 700;
+
+    function hidePreloader() {
+        var preloader = $('.spinner-wrapper');
+        preloader.fadeOut(preloaderFadeOutTime);
+    }
+    hidePreloader();
+});
+window.onscroll = function(){
+    let progress = document.getElementById("progressbar");
+    let totalHeight = document.body.scrollHeight - window.innerHeight;
+    let progressHeight = (window.pageYOffset / totalHeight) * 100;
+    progress.style.height = progressHeight + "%";
+  }
+</script>
+
+<style type="text/css">
+*{
+    margin: 0;
+    padding: 0;
+}
+nav{
+    animation: fadeInAnimation ease 4s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+    font-family: 'Autour One';
+}
+#top_nav{
+    font-family: 'Inder';
+    font-size: 16px;
+    top: -2;
+    font-weight: bold;
+}
+#nav_element{
+    background-color: #e3f2fd;
+    border-radius: 10px;
+    padding: 10px;
+}  
+#team{
+    font-size: 14px;
+    font-weight: 400;
+    color: #777;
+    font-family: 'Courgette';
+}
+#team h1{
+    font-size: 36px;
+    color: #555;
+    font-weight: bold;   
+}
+#team h5{
+    font-size: 24px;
+    color: #333;
+    font-weight: bold;   
+}
+#team img{
+    margin-top: -50px;
+}
+#team i{
+    font-size :26px;
+    color: #555;
+}
+#team p{
+    font-weight: 500;
+}
+#team .card{
+    border-radius: 5px;
+    box-shadow: 5px 5px 15px #171280;
+    transition: all 0.3s ease-in;
+    -webkit-transition: all 0.3s ease-in;
+    -moz-transition: all 0.3s ease-in;
+}
+#team .card:hover{
+    background: #14132b;
+    color: #fff;
+    border-radius: 20px;
+    border: none;
+    box-shadow: 5px 5px 10px #9E9E9E;
+
+}
+#team .card:hover h5, #team .card:hover h1,#team .card:hover i{
+    color: #fff;
+}
+.p-4{
+    font-size: 2.5em;
+  padding: 3rem;
+}
+.fa-facebook {
+  color: #3b5998;
+}
+.fa-twitter {
+  color:#00aced;
+}
+.fa-instagram{
+    color: #e4405f;
+}
+.spinner {
+    width: 40px;
+    height: 40px;
+    background-color: #333;
+    position: absolute;
+    top: 48%;
+    left: 48%;
+    -webkit-animation: sk-rotateplane 1.2s infinite ease-in-out;
+    animation: sk-rotateplane 1.2s infinite ease-in-out;
+}
+.spinner-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ff6347;
+    z-index: 999999;
+}
+@-webkit-keyframes sk-rotateplane {
+    0% {
+        -webkit-transform: perspective(120px) 
+}
+    50% {
+        -webkit-transform: perspective(120px) rotateY(180deg) 
+}
+    100% {
+        -webkit-transform: perspective(120px) rotateY(180deg) rotateX(180deg) 
+}
+}
+@keyframes sk-rotateplane {
+    0% {
+        transform: perspective(120px) rotateX(0deg) rotateY(0deg);
+        -webkit-transform: perspective(120px) rotateX(0deg) rotateY(0deg)
+}
+    50% {
+        transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg);
+        -webkit-transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg)
+}
+    100% {
+        transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
+        -webkit-transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
+    }
+}
+#header-nav, #nav_element, th, .navbar-toggler{
+background: rgb(149,207,249);
+background: -moz-linear-gradient(top,  rgba(149,207,249,1) 0%, rgba(123,237,225,1) 52%, rgba(118,240,193,1) 100%);
+background: -webkit-linear-gradient(top,  rgba(149,207,249,1) 0%,rgba(123,237,225,1) 52%,rgba(118,240,193,1) 100%);
+background: linear-gradient(to bottom,  rgba(149,207,249,1) 0%,rgba(123,237,225,1) 52%,rgba(118,240,193,1) 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#95cff9', endColorstr='#76f0c1',GradientType=0 );
+background-size: 350% 350%;
+animation: waveColors 5s ease infinite;
+}
+@-webkit-keyframes waveColors {
+  0% {
+    background-position: 0% 7%;
+  }
+  50% {
+    background-position: 100% 94%;
+  }
+  100% {
+    background-position: 0% 7%;
+  }
+}
+@keyframes waveColors {
+  0% {
+    background-position: 0% 7%;
+  }
+  50% {
+    background-position: 100% 94%;
+  }
+  100% {
+    background-position: 0% 7%;
+  }
+}
+
+header {
+  position: relative;
+  background-color: black;
+  height: 100vh;
+  min-height: 25rem;
+  width: 100%;
+  overflow: hidden;
+}
+
+header video {
+    background-color: black;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  z-index: 0;
+  -ms-transform: translateX(-50%) translateY(-50%);
+  -moz-transform: translateX(-50%) translateY(-50%);
+  -webkit-transform: translateX(-50%) translateY(-50%);
+  transform: translateX(-50%) translateY(-50%);
+}
+
+header .overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: transparent;
+  opacity: 1;
+  z-index: 1;
+}
+
+.pimg1, .pimg2, .pimg3,.pimg4,.pimg5,.pimg6{
+    position: relative;
+    opacity: 0.70;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+.pimg1{
+    background-image: url('../static/img/tracker.jpg');
+    min-height:400px;
+}
+
+.pimg2{
+    background-image: url('../static/img/facebook.jpg');
+    min-height:400px;
+}
+
+.pimg3{
+    background-image: url('../static/img/sentiment.jpg');
+    min-height:400px;
+}
+
+.pimg4{
+    background-image: url('../static/img/history.jpg');
+    min-height:400px;
+}
+
+.pimg5{
+    background-image: url('../static/img/graphs.jpg');
+    min-height:400px;
+}
+
+.pimg6{
+    background-image: url('../static/img/news.jpg');
+    min-height:400px;
+}
+
+.section{
+    text-align: left;
+    padding: 50px 80px;
+}
+
+.section-dark h2{
+    text-align: center;
+}
+
+.section-dark p{
+    font-size: 17px;
+}
+
+.section-dark{
+    background-color: #282e34;
+    color: #ddd;
+    font-family: "Comic Sans MS";
+}
+
+.ptext{
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    text-align: center;
+    color: #000;
+    font-size: 27px;
+    letter-spacing: 8px;
+    text-transform: uppercase;
+}
+
+.ptext .border{
+    background-color: #111;
+    color: #fff;
+    padding: 20px;
+    border-radius: 20px;
+}
+#overlay_header{
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    color: white;
+    text-align: center;
+    font-size: 40px;
+    letter-spacing: 8px;
+    text-transform: uppercase;
+}
+.section-dark a{
+    color: aqua;
+}
+
+@media (pointer: coarse) and (hover: none) {
+header {
+    height: 100%;
+}
+header .overlay{
+    height: 100%;
+}
+#particles-js{
+    height: auto;
+}
+.section-dark p{
+    font-size: 25px;
+}
+.section-dark{
+    font-family: "Comic Sans MS";
+}
+}
+::-webkit-scrollbar
+{
+  width: 0; 
+}
+#scrollPath{
+  position: fixed;
+  top: 0;
+  top: 0;
+  right: 0; /*left: 0;*/
+  width: 0.7%; /*height: 10px;*/
+  height: 100%;
+  background: rgba(255, 255, 255, 0.05);
+}
+#progressbar{
+  position: fixed;
+  top: 0;
+  right: 0; /*left: 0;*/
+  width: 0.7%; /*height: 10px;*/
+  background: linear-gradient(to top, #008aff, #00ffe7);
+  animation: scrollanimate 5s linear infinite;
+  border-radius: 5px;
+}
+@keyframes scrollanimate{
+  0%,100%
+  {
+    filter: hue-rotate(0deg);
+  }
+  50%
+  {
+    filter: hue-rotate(360deg);
+  }
+}
+#progressbar::before{
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to top, #008aff, #00ffe7);
+  filter: blur(10px);
+}
+body{
+    width: 99.3%;
+}
+#progressbar::after{
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to top, #008aff, #00ffe7);
+  filter: blur(30px);
+}
+.overlay:after{
+    visibility: visible;
+    content: '';
+    background-color: #fff;
+    display: inline-block;
+    position: relative;
+    width: 2px;
+    height: 1em;
+    top: 5px;
+    margin-left: 3px;
+    -webkit-animation: blinker 0.7s linear infinite;
+            animation: blinker 0.7s linear infinite;
+}
+@-webkit-keyframes blinker {
+    50% {
+        opacity: 0;
+        -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+    }
+}
+
+@keyframes blinker {
+    50% {
+        opacity: 0;
+        -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+    }
+}
+</style>

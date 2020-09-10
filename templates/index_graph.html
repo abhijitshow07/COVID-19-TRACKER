@@ -1,0 +1,640 @@
+<head>
+    <meta charset="utf-8">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+    <title>COVID-19 Graphs</title>
+    <link rel = "icon" href = "../static/img/corona.png" type = "image/x-icon">
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-167172502-2"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-167172502-2');
+    </script>
+
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+    <!-- <script src="https://code.highcharts.com/highcharts.js"></script> -->
+    <!-- <script src="https://code.highcharts.com/highcharts-more.js"></script> -->
+
+    <script src="https://code.highcharts.com/maps/highmaps.js"></script>
+    <script src="https://code.highcharts.com/maps/modules/data.js"></script>
+    <script src="https://code.highcharts.com/maps/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/maps/modules/offline-exporting.js"></script>
+    <script src="https://code.highcharts.com/mapdata/custom/world.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://github.com/downloads/lafeber/world-flags-sprite/flags32.css" />
+
+    <link href='https://fonts.googleapis.com/css?family=Autour One' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Inder' rel='stylesheet'>
+
+    <nav class="navbar navbar-light" id="header-nav">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#"><img src="https://www.klyuniv.ac.in/images/KU_LOGO_png22.jpg"></a>
+            <h1 style="color:#171280;">COVID-19 GRAPHS</h1>
+        </div>
+        <div class="container-fluid" id="depatment">
+            <a class="navbar-brand" href="#"></a>
+            <h5 align="right">DEPT. OF STATISTICS, UNIVERSITY OF KALYANI</h5>
+        </div>
+    </nav>
+
+    <nav class="nav navbar navbar-right navbar-expand-lg navbar-light bg-light sticky-top" id="top_nav">
+      <a class="navbar-brand" href="/" style="font-weight: bold;">COVID-19 TRACKER</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav container">
+            <a class="nav-item nav-link" href="/" >Home</a>
+            <a class="nav-item nav-link" href="/india" target="_blank">India Tracker</a>
+            <li><a class="nav-item nav-link active" href="/index_graph" id="nav_element">Graphs<span class="sr-only">(current)</span></a></li>
+            <a class="nav-item nav-link"  href="/index_sentiment">Sentiment Analysis</a>
+            <a class="nav-item nav-link"  href="/index_news">News</a>
+            <a class="nav-item nav-link"  href="/index_historical">Historical Data</a>
+            <a class="nav-item nav-link"  href="/index_predictions">Predictions</a>
+            <a class="nav-item nav-link"  href="/about">About</a>
+        </div>
+      </div>
+    </nav>
+</head>
+<html>
+<body>
+
+<div class="spinner-wrapper">
+    <div class="spinner"></div>
+</div>
+
+<div id="container_geo"></div>
+<br>
+<div class="container">
+    <div class="flourish-embed flourish-bar-chart-race" data-src="visualisation/2104751" data-url="https://flo.uri.sh/visualisation/2104751/embed" id="chart_race"><script src="https://public.flourish.studio/resources/embed.js"></script></div>
+</div>
+<br>
+<div class="row" style="margin: auto">
+	<div class="col" id="container_line"></div>
+    <div class="col" id="container_pie"></div>
+</div>
+<br>
+<div class="container" style="margin: auto">
+    <div id="container_bar_cases"></div>
+    <br>
+    <div id="container_bar_deaths"></div>
+    <br>
+    <div id="container_bar_recovered"></div>
+</div>
+<br>
+
+</body>
+</html>
+
+<script>
+
+function global_line_bar() {
+    $.ajax({
+        url: "https://disease.sh/v3/covid-19/historical/all?lastdays=all",
+        type: 'GET',
+        dataType: 'json', // added data type
+        cache: false,
+        success: function(response) {
+            console.log(response);
+            cases = Object.values(response["cases"]);
+            deaths = Object.values(response["deaths"]);
+            recovered = Object.values(response["recovered"]);
+            cases_daily = []
+            deaths_daily = []
+            recovered_daily = []
+            dates = [];
+            for (let i = 0; i < Object.keys(response["cases"]).length; i++) {
+                dates.push((new Date(Object.keys(response["cases"])[i])).toString().slice(4, 10))
+            }
+            for (let i = 0; i < Object.keys(response["cases"]).length - 1; i++) {
+                cases_daily.push(Object.values(response["cases"])[i + 1] - Object.values(response["cases"])[i])
+                deaths_daily.push(Object.values(response["deaths"])[i + 1] - Object.values(response["deaths"])[i])
+                recovered_daily.push(Object.values(response["recovered"])[i + 1] - Object.values(response["recovered"])[i])
+            }
+            Highcharts.chart('container_line', {
+                chart: {
+                    borderWidth: 2,
+                    borderRadius: 25
+                },
+                title: {
+                    text: 'Cumulative Confirmed Coronavirus Cases/Deaths/Recovered'
+                },
+
+                subtitle: {
+                    text: 'Source: <a href="https://github.com/CSSEGISandData/COVID-19">Johns Hopkins CSSE</a>'
+                },
+
+                yAxis: {
+                    title: {
+                        text: 'Confirmed Cases/Deaths/Recovered'
+                    }
+                },
+
+                xAxis: {
+                    categories: dates
+                },
+
+                legend: {
+                    layout: 'vertical',
+                    align: 'right',
+                    verticalAlign: 'middle'
+                },
+
+                series: [{
+                    name: 'Cases',
+                    data: cases
+                }, {
+                    name: 'Deaths',
+                    data: deaths,
+                    color: "#ff3333"
+                }, {
+                    name: 'Recovered',
+                    data: recovered,
+                    color: "#55ff33"
+                }],
+
+                responsive: {
+                    rules: [{
+                        condition: {
+                            maxWidth: 500
+                        },
+                        chartOptions: {
+                            legend: {
+                                layout: 'horizontal',
+                                align: 'center',
+                                verticalAlign: 'bottom'
+                            }
+                        }
+                    }]
+                }
+
+            });
+            Highcharts.chart('container_bar_cases', {
+                chart: {
+                    borderWidth: 0,
+                    type: 'column',
+                    borderRadius: 25
+                },
+                title: {
+                    text: 'Daily Confirmed Coronavirus Cases'
+                },
+                subtitle: {
+                    text: 'Source: <a href="https://github.com/CSSEGISandData/COVID-19">Johns Hopkins CSSE</a>'
+                },
+                xAxis: {
+                    categories: dates,
+                    crosshair: true
+                },
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: 'Daily Confirmed Cases'
+                    }
+                },
+                tooltip: {
+                    // headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                    pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                        '<td style="padding:0"><b>{point.y}</b></td></tr>',
+                    footerFormat: '</table>',
+                    shared: true,
+                    useHTML: true
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
+                    }
+                },
+                series: [{
+                    name: 'Cases',
+                    data: cases_daily
+
+                }]
+            });
+            Highcharts.chart('container_bar_deaths', {
+                chart: {
+                    borderWidth: 0,
+                    type: 'column',
+                    borderRadius: 25
+                },
+                title: {
+                    text: 'Daily Confirmed Coronavirus Deaths'
+                },
+                subtitle: {
+                    text: 'Source: <a href="https://github.com/CSSEGISandData/COVID-19">Johns Hopkins CSSE</a>'
+                },
+                xAxis: {
+                    categories: dates,
+                    crosshair: true
+                },
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: 'Daily Confirmed Deaths'
+                    }
+                },
+                tooltip: {
+                    // headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                    pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                        '<td style="padding:0"><b>{point.y}</b></td></tr>',
+                    footerFormat: '</table>',
+                    shared: true,
+                    useHTML: true
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
+                    }
+                },
+                series: [{
+                    name: 'Deaths',
+                    data: deaths_daily,
+                    color: "#ff3333"
+
+                }]
+            });
+            Highcharts.chart('container_bar_recovered', {
+                chart: {
+                    borderWidth: 0,
+                    type: 'column',
+                    borderRadius: 25
+                },
+                title: {
+                    text: 'Daily Confirmed Coronavirus Recovered'
+                },
+                subtitle: {
+                    text: 'Source: <a href="https://github.com/CSSEGISandData/COVID-19">Johns Hopkins CSSE</a>'
+                },
+                xAxis: {
+                    categories: dates,
+                    crosshair: true
+                },
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: 'Daily Confirmed Recovered'
+                    }
+                },
+                tooltip: {
+                    // headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                    pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                        '<td style="padding:0"><b>{point.y}</b></td></tr>',
+                    footerFormat: '</table>',
+                    shared: true,
+                    useHTML: true
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
+                    }
+                },
+                series: [{
+                    name: 'Recovered',
+                    data: recovered_daily,
+                    color: "#56e319"
+
+                }]
+            });
+        }
+    });
+}
+
+function global_geo_pie() {
+    $.ajax({
+        url: "https://disease.sh/v3/covid-19/countries",
+        type: 'GET',
+        dataType: 'json', // added data type
+        cache: false,
+        success: function(response) {
+            console.log(response);
+            for (let i = 0; i < response.length; i++) {
+                for (let j = 1; j < (response.length - i); j++) {
+                    if (response[j - 1]["cases"] < response[j]["cases"]) {
+                        var temp = response[j - 1];
+                        response[j - 1] = response[j];
+                        response[j] = temp;
+                    }
+                }
+            }
+            data_geo = [];
+            data_pie = [];
+            for (let i = 0; i < response.length; i++) {
+                data_geo.push({
+                    "code3": response[i]["countryInfo"]["iso3"],
+                    "value": response[i]["cases"],
+                    "name": response[i]["country"],
+                    "code": response[i]["countryInfo"]["iso2"]
+                })
+                data_pie.push({
+                    "name": response[i]["country"],
+                    "y": response[i]["cases"]
+                })
+            }
+            data_geo.forEach(function(p) {
+                p.value = (p.value < 1 ? 1 : p.value);
+            });
+            // Initiate the chart
+            Highcharts.mapChart('container_geo', {
+                chart: {
+                    map: 'custom/world',
+                },
+
+                title: {
+                    text: 'Confirmed Coronavirus Cases by Country'
+                },
+                subtitle: {
+                    text: 'Source: <a href="https://github.com/CSSEGISandData/COVID-19">Johns Hopkins CSSE</a>'
+                },
+                legend: {
+                    title: {
+                        text: 'Total Number of Cases',
+                        style: {
+                            color: ( // theme
+                                Highcharts.defaultOptions &&
+                                Highcharts.defaultOptions.legend &&
+                                Highcharts.defaultOptions.legend.title &&
+                                Highcharts.defaultOptions.legend.title.style &&
+                                Highcharts.defaultOptions.legend.title.style.color
+                            ) || 'black'
+                        }
+                    }
+                },
+
+                // mapNavigation: {
+                //     enabled: true
+                // },
+
+                tooltip: {
+                    backgroundColor: 'none',
+                    borderWidth: 0,
+                    shadow: false,
+                    useHTML: true,
+                    padding: 0,
+                    pointFormat: '<span style="font-size:20px" class="f32"><span class="flag {point.properties.hc-key}">' +
+                        '</span> {point.name}</span><br>' +
+                        '<span style="font-size:30px">{point.value}</span>',
+                    positioner: function() {
+                        return {
+                            x: 80,
+                            y: 450
+                        };
+                    }
+                },
+
+                colorAxis: {
+                    min: 1,
+                    max: 10000000,
+                    type: 'logarithmic'
+                },
+
+                series: [{
+                    data: data_geo,
+                    joinBy: ['iso-a3', 'code3'],
+                    animation: true,
+                    name: 'Confirmed Cases',
+                    states: {
+                        hover: {
+                            color: '#a4edba'
+                        }
+                    }
+                }]
+            });
+
+            Highcharts.chart('container_pie', {
+                chart: {
+                    plotBackgroundColor: null,
+                    plotBorderWidth: null,
+                    plotShadow: false,
+                    type: 'pie',
+                    borderWidth: 2,
+                    borderRadius: 25
+                },
+                subtitle: {
+                    text: 'Source: <a href="https://github.com/CSSEGISandData/COVID-19">Johns Hopkins CSSE</a>'
+                },
+                title: {
+                    text: 'Percentage of Confirmed Cases by Country'
+                },
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                },
+                accessibility: {
+                    point: {
+                        valueSuffix: '%'
+                    }
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: true,
+                            format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                        }
+                    }
+                },
+                series: [{
+                    name: 'Percentage Cases',
+                    colorByPoint: true,
+                    data: data_pie
+                }]
+            });
+        }
+    });
+}
+
+Highcharts.setOptions({
+    lang: {
+        thousandsSep: ','
+    }
+});
+
+global_geo_pie();
+global_line_bar();
+
+window.setInterval(function() {
+    global_geo_pie();
+    global_line_bar();
+}, 300 * 1000);
+
+$(document).ready(function() {
+    //Preloader
+    preloaderFadeOutTime = 700;
+
+    function hidePreloader() {
+        var preloader = $('.spinner-wrapper');
+        preloader.fadeOut(preloaderFadeOutTime);
+    }
+    hidePreloader();
+});
+
+</script>
+
+<style>
+
+.f32 .flag {
+    vertical-align: middle !important;
+}
+nav{
+    animation: fadeInAnimation ease 4s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+    font-family: 'Autour One';
+    font-size: 10px;
+}
+#top_nav{
+    font-family: 'Inder';
+    font-size: 16px;
+    top: -2;
+    font-weight: bold;
+}
+#nav_element{
+    background-color: #e3f2fd;
+    border-radius: 10px;
+    padding: 10px;
+}
+#container_geo{
+    animation: fadeInAnimation ease 5s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+    height: 650px;
+    width: 100%;
+}
+#chart_race{
+    border-radius: 10px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,1);
+    background-color: white;
+}
+
+#container_line{
+    height: 500px;
+    animation: fadeInAnimation ease 6s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+}
+#container_pie{
+    height: 500px;
+    animation: fadeInAnimation ease 7s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+}
+#container_bar_cases{
+    height: 500px;
+    animation: fadeInAnimation ease 8s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+    border-radius: 25px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,1);
+    background-color: white;
+}
+#container_bar_deaths{
+    height: 500px;
+    animation: fadeInAnimation ease 8s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+    border-radius: 25px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,1);
+    background-color: white;
+}
+#container_bar_recovered{
+    height: 500px;
+    animation: fadeInAnimation ease 8s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+    border-radius: 25px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,1);
+    background-color: white;
+}
+@keyframes fadeInAnimation {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+.spinner {
+    width: 40px;
+    height: 40px;
+    background-color: #333;
+    position: absolute;
+    top: 48%;
+    left: 48%;
+    -webkit-animation: sk-rotateplane 1.2s infinite ease-in-out;
+    animation: sk-rotateplane 1.2s infinite ease-in-out;
+}
+.spinner-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ff6347;
+    z-index: 999999;
+}
+@-webkit-keyframes sk-rotateplane {
+    0% {
+        -webkit-transform: perspective(120px) 
+}
+    50% {
+        -webkit-transform: perspective(120px) rotateY(180deg) 
+}
+    100% {
+        -webkit-transform: perspective(120px) rotateY(180deg) rotateX(180deg) 
+}
+}
+@keyframes sk-rotateplane {
+    0% {
+        transform: perspective(120px) rotateX(0deg) rotateY(0deg);
+        -webkit-transform: perspective(120px) rotateX(0deg) rotateY(0deg)
+}
+    50% {
+        transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg);
+        -webkit-transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg)
+}
+    100% {
+        transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
+        -webkit-transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
+    }
+}
+#header-nav, #nav_element, th, .navbar-toggler{
+background: rgb(149,207,249);
+background: -moz-linear-gradient(top,  rgba(149,207,249,1) 0%, rgba(123,237,225,1) 52%, rgba(118,240,193,1) 100%);
+background: -webkit-linear-gradient(top,  rgba(149,207,249,1) 0%,rgba(123,237,225,1) 52%,rgba(118,240,193,1) 100%);
+background: linear-gradient(to bottom,  rgba(149,207,249,1) 0%,rgba(123,237,225,1) 52%,rgba(118,240,193,1) 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#95cff9', endColorstr='#76f0c1',GradientType=0 );
+background-size: 350% 350%;
+animation: waveColors 5s ease infinite;
+}
+@-webkit-keyframes waveColors {
+  0% {
+    background-position: 0% 7%;
+  }
+  50% {
+    background-position: 100% 94%;
+  }
+  100% {
+    background-position: 0% 7%;
+  }
+}
+@keyframes waveColors {
+  0% {
+    background-position: 0% 7%;
+  }
+  50% {
+    background-position: 100% 94%;
+  }
+  100% {
+    background-position: 0% 7%;
+  }
+}
+</style>

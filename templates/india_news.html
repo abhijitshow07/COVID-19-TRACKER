@@ -1,0 +1,289 @@
+<head>
+	<meta charset="utf-8">
+  <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+	<title>India | COVID-19 News</title>
+  <link rel = "icon" href = "../static/img/corona.png" type = "image/x-icon">
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-167172502-2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-167172502-2');
+  </script>
+
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+  <script src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
+
+	<!-- <script src="https://code.highcharts.com/highcharts.js"></script> -->
+	<!-- <script src="https://code.highcharts.com/highcharts-more.js"></script> -->
+
+	<!-- <script src="https://code.highcharts.com/maps/highmaps.js"></script>
+	<script src="https://code.highcharts.com/maps/modules/data.js"></script>
+	<script src="https://code.highcharts.com/maps/modules/exporting.js"></script>
+	<script src="https://code.highcharts.com/maps/modules/offline-exporting.js"></script>
+	<script src="https://code.highcharts.com/mapdata/custom/world.js"></script> -->
+
+	<link href='https://fonts.googleapis.com/css?family=Autour One' rel='stylesheet'>
+  <link href='https://fonts.googleapis.com/css?family=Courgette' rel='stylesheet'>
+  <link href='https://fonts.googleapis.com/css?family=Inder' rel='stylesheet'>
+
+	<!-- <script src="index.js"></script> -->
+	<!-- <link rel="stylesheet" href="index.css"> -->
+
+  <nav class="navbar navbar-light" id="header-nav">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#"><img src="https://www.klyuniv.ac.in/images/KU_LOGO_png22.jpg"></a>
+      <h1 style="color:#171280;">INDIA COVID-19 NEWS</h1>
+    </div>
+    <div class="container-fluid" id="depatment">
+        <a class="navbar-brand" href="#"></a>
+        <h5 align="right">DEPT. OF STATISTICS, UNIVERSITY OF KALYANI</h5>
+    </div>
+  </nav>
+
+  <nav class="nav navbar navbar-right navbar-expand-lg navbar-light bg-light sticky-top" id="top_nav">
+    <a class="navbar-brand" href="/india" style="font-weight: bold;">INDIA COVID-19 TRACKER</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav container">
+        <a class="nav-item nav-link"  href="/" >Home</a>
+        <a class="nav-item nav-link"  href="/india">India Tracker</a>
+        <a class="nav-item nav-link"  href="/india_graph">Graphs</a>
+        <a class="nav-item nav-link"  href="/india_sentiment">Sentiment Analysis</a>
+        <li><a class="nav-item nav-link active" href="/india_news" id="nav_element">News<span class="sr-only">(current)</span></a></li>
+        <a class="nav-item nav-link"  href="/india_predictions">Predictions</a>
+        <a class="nav-item nav-link"  href="/about">About</a>
+      </div>
+    </div>
+  </nav>
+
+</head>
+
+<html>
+<body>
+
+<div class="spinner-wrapper">
+<div class="spinner"></div>
+</div>
+
+<br>
+<div class="container" id="global_news" align="center"></div>
+<div class="container" align="center">
+	<h4>Powered By <a href="https://newsapi.org/" target="_blank">News API</a></h4>
+</div>
+</body>
+</html>
+
+<script>
+	
+function global_news(){
+$.ajax({
+        url: "/get_india_news",
+        type: 'GET',
+        dataType: 'json', // added data type
+        cache: false,
+        success: function(response) {
+        console.log(response);
+        div_news = document.getElementById('global_news')
+        for(i = 0 ; i < response.length-1 ; i++)
+        {
+          div = document.createElement('div');
+          div.class = "card";
+          div.id = "news"
+
+          title = document.createElement('h3');
+          title.innerHTML = response[i]["title"];
+          title.id = "title"
+          div.appendChild(title)
+
+          if(response[i].image_url != null)
+          {
+            image = document.createElement('img');
+            image.src = response[i].image_url;
+            image.style.width = "67%";
+            image.style.height = "auto";
+            image.id = "news_image"
+            div.appendChild(image)
+          }
+
+          description = document.createElement('h5');
+          description.innerHTML = response[i]["description"] + " - " + response[i]["source"]
+          description.id = "description"
+          div.appendChild(description)
+
+          div_audio = document.createElement('div');
+
+          audio = document.createElement('audio');
+          audio.id = "audio_" + i.toString();
+          audio.src = response[response.length-1]["audio_locations"][i]
+          div_audio.appendChild(audio)
+
+          a = document.createElement('a');
+          a.setAttribute("onclick","document.getElementById('" + 'audio_' + i.toString() + "').play()");
+          a.style="cursor: pointer;"
+
+          fontaws = document.createElement('i');
+          fontaws.setAttribute("class","fas fa-volume-up fa-2x");
+          text = document.createElement('h6');
+          text.innerHTML = "Tap Here";
+          div_audio.appendChild(text)
+          a.appendChild(fontaws)
+          div_audio.appendChild(a)
+
+          div.appendChild(div_audio)
+
+          br = document.createElement('br');
+          div.appendChild(br)
+
+          div_link = document.createElement('div');
+          link = document.createElement('a');
+          link.innerHTML = "Read the full article"
+          link.id = "link"
+          link.href = response[i]["url"]
+          link.target="_blank";
+          div_link.appendChild(link)
+          div.appendChild(div_link)
+
+          div_news.appendChild(div)
+          br = document.createElement('br');
+          br.style.lineHeight = 5;
+          div_news.appendChild(br)
+        }
+
+    }
+})
+}
+global_news();
+
+$(document).ready(function() {
+    //Preloader
+    preloaderFadeOutTime = 700;
+
+    function hidePreloader() {
+        var preloader = $('.spinner-wrapper');
+        preloader.fadeOut(preloaderFadeOutTime);
+    }
+    hidePreloader();
+});
+</script>
+
+<style>
+nav{ 
+  animation: fadeInAnimation ease 4s; 
+  animation-iteration-count: 1; 
+  animation-fill-mode: forwards;
+  font-family: 'Autour One';
+  font-size: 10px;
+}
+body {
+	font-family: 'Courgette';
+}
+#top_nav{
+    font-family: 'Inder';
+    font-size: 16px;
+    top: -2;
+    font-weight: bold;
+}
+#nav_element{
+    background-color: #e3f2fd;
+    border-radius: 10px;
+    padding: 10px;
+}
+#title{
+	background-color: #e3f2fd;
+	border-radius: 25px;
+	font-weight: bold;
+}
+#news, #news_image{
+	border-radius: 25px;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,1);
+}
+#description{
+	/*text-align: left;*/
+	margin: 20; 
+	font-weight: bold;
+}
+#link{
+	text-align: right;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  background-color: #333;
+
+  position: absolute;
+  top: 48%;
+  left: 48%;
+  -webkit-animation: sk-rotateplane 1.2s infinite ease-in-out;
+  animation: sk-rotateplane 1.2s infinite ease-in-out;
+}
+
+.spinner-wrapper {
+position: fixed;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background-color: #ff6347;
+z-index: 999999;
+}
+
+@-webkit-keyframes sk-rotateplane {
+  0% { -webkit-transform: perspective(120px) }
+  50% { -webkit-transform: perspective(120px) rotateY(180deg) }
+  100% { -webkit-transform: perspective(120px) rotateY(180deg)  rotateX(180deg) }
+}
+
+@keyframes sk-rotateplane {
+  0% { 
+    transform: perspective(120px) rotateX(0deg) rotateY(0deg);
+    -webkit-transform: perspective(120px) rotateX(0deg) rotateY(0deg) 
+  } 50% { 
+    transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg);
+    -webkit-transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg) 
+  } 100% { 
+    transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
+    -webkit-transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
+  }
+}
+#header-nav, #nav_element, .navbar-toggler{
+background: rgb(149,207,249);
+background: -moz-linear-gradient(top,  rgba(149,207,249,1) 0%, rgba(123,237,225,1) 52%, rgba(118,240,193,1) 100%);
+background: -webkit-linear-gradient(top,  rgba(149,207,249,1) 0%,rgba(123,237,225,1) 52%,rgba(118,240,193,1) 100%);
+background: linear-gradient(to bottom,  rgba(149,207,249,1) 0%,rgba(123,237,225,1) 52%,rgba(118,240,193,1) 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#95cff9', endColorstr='#76f0c1',GradientType=0 );
+background-size: 350% 350%;
+animation: waveColors 5s ease infinite;
+}
+@-webkit-keyframes waveColors {
+  0% {
+    background-position: 0% 7%;
+  }
+  50% {
+    background-position: 100% 94%;
+  }
+  100% {
+    background-position: 0% 7%;
+  }
+}
+@keyframes waveColors {
+  0% {
+    background-position: 0% 7%;
+  }
+  50% {
+    background-position: 100% 94%;
+  }
+  100% {
+    background-position: 0% 7%;
+  }
+}
+</style>

@@ -1,0 +1,514 @@
+<head>
+	<meta charset="utf-8">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+	<title>COVID-19 Tracker</title>
+    <link rel = "icon" href = "../static/img/corona.png" type = "image/x-icon">
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-167172502-2"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-167172502-2');
+    </script>
+
+
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+    <script src="https://use.fontawesome.com/releases/v5.13.0/js/all.js"></script>
+
+	<!-- <script src="https://code.highcharts.com/highcharts.js"></script> -->
+	<!-- <script src="https://code.highcharts.com/highcharts-more.js"></script> -->
+
+	<script src="https://code.highcharts.com/maps/highmaps.js"></script>
+	<script src="https://code.highcharts.com/maps/modules/data.js"></script>
+	<script src="https://code.highcharts.com/maps/modules/exporting.js"></script>
+	<script src="https://code.highcharts.com/maps/modules/offline-exporting.js"></script>
+	<script src="https://code.highcharts.com/mapdata/custom/world.js"></script>
+
+	<link href='https://fonts.googleapis.com/css?family=Autour One' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Inder' rel='stylesheet'>
+
+	<!-- <script src="index.js"></script> -->
+	<!-- <link rel="stylesheet" href="index.css"> -->
+
+    <nav class="navbar navbar-light" id="header-nav">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#"><img src="https://www.klyuniv.ac.in/images/KU_LOGO_png22.jpg"></a>
+            <h1 style="color:#171280;">COVID-19 TRACKER</h1>
+        </div>
+        <div class="container-fluid" id="depatment">
+            <a class="navbar-brand" href="#"></a>
+            <h5 align="right">DEPT. OF STATISTICS, UNIVERSITY OF KALYANI</h5>
+        </div>
+    </nav>
+
+    <nav class="nav navbar navbar-right navbar-expand-lg navbar-light bg-light sticky-top" id="top_nav">
+      <a class="navbar-brand" href="/" style="font-weight: bold;">COVID-19 TRACKER</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav container">
+            <li><a class="nav-item nav-link active" href="/" id="nav_element">Home<span class="sr-only">(current)</span></a></li>
+            <a class="nav-item nav-link"  href="/india" target="_blank">India Tracker</a>
+            <a class="nav-item nav-link"  href="/index_graph">Graphs</a>
+            <a class="nav-item nav-link"  href="/index_sentiment">Sentiment Analysis</a>
+            <a class="nav-item nav-link"  href="/index_news">News</a>
+            <a class="nav-item nav-link"  href="/index_historical">Historical Data</a>
+            <a class="nav-item nav-link"  href="/index_predictions">Predictions</a>
+            <a class="nav-item nav-link"  href="/about">About</a>
+        </div>
+      </div>
+    </nav>
+
+</head>
+
+<html>
+<body>
+
+<div class="spinner-wrapper">
+<div class="spinner"></div>
+</div>
+
+<div id="container_geo_bubble"></div>
+<br>
+<div class="container" id="top">
+	<h2 id="cases"></h2>
+	<h2 id="deaths"></h2>
+	<h2 id="recovered"></h2>
+	<h2 id="affectedCountries"></h2>
+	<p id="updated"></p>
+</div>
+<br>
+<div class="container" id="resp-table">
+
+    <input type="search" placeholder="Search..." class="form-control search-input" data-table="corona-list" id="search" autocomplete="off" />
+	<table id="coronavirus" class ="table table-hover table-bordered table-fixed corona-list"></table>
+</div>
+</body>
+</html>
+<script>
+function covid19() {
+    $.ajax({
+        url: "https://disease.sh/v3/covid-19/all",
+        type: 'GET',
+        dataType: 'json', // added data type
+        cache: false,
+        success: function(response) {
+            console.log(response);
+            header = ["Country / Other", "Total Cases", "New Cases", "Active Cases", "Cases/ 1M pop", 
+            "Total Deaths","New Deaths", "Deaths/ 1M pop", "Total Recovered","Recovered/ 1M pop",
+            "Serious /Critical", "Tests", "Tests /1M pop"
+            ];
+
+            document.getElementById('cases').innerHTML = "<i id='icon' class='fas fa-virus'></i> Coronavirus Cases: " + response["cases"].toLocaleString();
+            document.getElementById('deaths').innerHTML = "<i id='icon' class='fas fa-lungs-virus'></i> Deaths: " + response["deaths"].toLocaleString();
+            document.getElementById('recovered').innerHTML = "<i id='icon' class='fas fa-shield-virus'></i> Recovered: " + response["recovered"].toLocaleString();
+            document.getElementById('affectedCountries').innerHTML = "<i id='icon' class='fas fa-globe-americas'></i> Affected Countries: " + response["affectedCountries"].toLocaleString();
+            document.getElementById('updated').innerHTML = "Updated: " + new Date(response["updated"]);
+
+            table = document.getElementById('coronavirus');
+            tr = document.createElement('tr');
+            thead = document.createElement('thead');
+            for (let i = 0; i < header.length; i++) {
+                th = document.createElement('th');
+                Node = document.createTextNode(header[i]);
+                th.appendChild(Node)
+                tr.appendChild(th)
+            }
+            thead.appendChild(tr)
+            table.appendChild(thead)
+            tbody = document.createElement('tbody');
+            tr = document.createElement('tr');
+
+            keys = ["country","cases","todayCases","active","casesPerOneMillion","deaths","todayDeaths",
+                    "deathsPerOneMillion","recovered","recoveredPerOneMillion","critical",
+                    "tests","testsPerOneMillion"]
+            values = []
+            for (let i = 0 ; i < keys.length ; i++){
+                values.push(response[keys[i]])
+            }
+
+            for (let i = 0 ; i < keys.length ; i++){
+                if (keys[i] == "country") {
+                    td = document.createElement('td');
+                    Node = document.createTextNode("World ");
+                    td.appendChild(Node)
+                    tr.appendChild(td)
+                    img = document.createElement('img');
+                    img.src = "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Whole_world_-_land_and_oceans_12000.jpg/800px-Whole_world_-_land_and_oceans_12000.jpg";
+                    img.height = "20";
+                    img.width = "30";
+                    td.appendChild(img)
+                }
+                else{
+                    td = document.createElement('td');
+                    num = values[i];
+                    if (num == 0 || num == null) {
+                        num = "";
+                    }
+                    if (keys[i] == "todayDeaths" && num != "")
+                    {
+                        td.style.backgroundColor = "red";
+                        td.style.color = "white"
+                    }
+                    Node = document.createTextNode(num.toLocaleString());
+                    td.appendChild(Node)
+                    tr.appendChild(td)
+                }
+            }
+            tbody.appendChild(tr)
+            table.appendChild(tbody);
+            covid();
+        }
+    });
+}
+
+function covid() {
+    $.ajax({
+        url: "https://disease.sh/v3/covid-19/countries",
+        type: 'GET',
+        dataType: 'json', // added data type
+        cache: false,
+        success: function(response) {
+            console.log(response);
+            for (let i = 0; i < response.length; i++) {
+                for (let j = 1; j < (response.length - i); j++) {
+                    if (response[j - 1]["cases"] < response[j]["cases"]) {
+                        var temp = response[j - 1];
+                        response[j - 1] = response[j];
+                        response[j] = temp;
+                    }
+                }
+            }
+            table = document.getElementById('coronavirus');
+            tbody = document.createElement('tbody');
+
+            keys = ["country","cases","todayCases","active","casesPerOneMillion","deaths","todayDeaths",
+                    "deathsPerOneMillion","recovered","recoveredPerOneMillion","critical",
+                    "tests","testsPerOneMillion"]
+
+            for (let i = 0; i < response.length; i++){
+                tr = document.createElement('tr');
+                values = []
+                for (let j = 0 ; j < keys.length ; j++){
+                    values.push(response[i][keys[j]])
+                }
+                for (let k = 0; k < values.length; k++){
+                    if (k == 0) {
+                        td = document.createElement('td');
+                        Node = document.createTextNode(values[k] + " ");
+                        td.appendChild(Node)
+                        tr.appendChild(td)
+                        img = document.createElement('img');
+                        img.src = response[i].countryInfo.flag;
+                        img.height = "20";
+                        img.width = "30";
+                        td.appendChild(img)
+                    } else {
+                        td = document.createElement('td');
+                        num = values[k];
+                        if (num == 0 || num == null) {
+                            num = "";
+                        }
+                        if(keys[k] == "todayDeaths" && num != ""){
+                            td.style.backgroundColor = "red";
+                            td.style.color = "white"
+                        }
+                        Node = document.createTextNode(num.toLocaleString());
+                        td.appendChild(Node)
+                        tr.appendChild(td)
+                    }
+                }
+                tbody.appendChild(tr)
+            }
+            table.appendChild(tbody)
+                //HighChart
+            data = []
+            for (let i = 0; i < response.length; i++) {
+                data.push({
+                    "code3": response[i]["countryInfo"]["iso3"],
+                    "z": response[i]["cases"],
+                    "code": response[i]["countryInfo"]["iso2"]
+                })
+            }
+            Highcharts.mapChart('container_geo_bubble', {
+                chart: {
+                    borderWidth: 0,
+                    map: 'custom/world'
+                },
+
+                title: {
+                    text: 'Confirmed Coronavirus Cases by Country'
+                },
+
+                subtitle: {
+                    text: 'Source: <a href="https://github.com/CSSEGISandData/COVID-19">Johns Hopkins CSSE</a>'
+                },
+
+                legend: {
+                    enabled: false
+                },
+
+                mapNavigation: {
+                    enabled: false,
+                    buttonOptions: {
+                        verticalAlign: 'bottom'
+                    }
+                },
+
+                series: [{
+                    name: 'Countries',
+                    color: '#E0E0E0',
+                    enableMouseTracking: true
+                }, {
+                    type: 'mapbubble',
+                    name: 'Confirmed Cases',
+                    joinBy: ['iso-a3', 'code3'],
+                    animation: true,
+                    data: data,
+                    color: "#ff3333",
+                    minSize: 4,
+                    maxSize: '12%',
+                    tooltip: {
+                        pointFormat: '{point.name}: {point.z}'
+                    }
+                }]
+            });
+        }
+    });
+}
+covid19();
+window.setInterval(function() {
+    $("table").empty();
+    covid19();
+}, 300 * 1000);
+
+(function(document) {
+    'use strict';
+
+    var TableFilter = (function(myArray) {
+        var search_input;
+
+        function _onInputSearch(e) {
+            search_input = e.target;
+            var tables = document.getElementsByClassName(search_input.getAttribute('data-table'));
+            myArray.forEach.call(tables, function(table) {
+                myArray.forEach.call(table.tBodies, function(tbody) {
+                    myArray.forEach.call(tbody.rows, function(row) {
+                        var text_content = row.textContent.toLowerCase();
+                        var search_val = search_input.value.toLowerCase();
+                        row.style.display = text_content.indexOf(search_val) > -1 ? '' : 'none';
+                    });
+                });
+            });
+        }
+
+        return {
+            init: function() {
+                var inputs = document.getElementsByClassName('search-input');
+                myArray.forEach.call(inputs, function(input) {
+                    input.oninput = _onInputSearch;
+                });
+            }
+        };
+    })(Array.prototype);
+
+    document.addEventListener('readystatechange', function() {
+        if (document.readyState === 'complete') {
+            TableFilter.init();
+        }
+    });
+
+})(document);
+
+Highcharts.setOptions({
+    lang: {
+        thousandsSep: ','
+    }
+});
+
+$(document).ready(function() {
+    //Preloader
+    preloaderFadeOutTime = 700;
+
+    function hidePreloader() {
+        var preloader = $('.spinner-wrapper');
+        preloader.fadeOut(preloaderFadeOutTime);
+    }
+    hidePreloader();
+});
+</script>
+<style>
+nav{
+    animation: fadeInAnimation ease 4s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+    font-family: 'Autour One';
+}
+body, #top_nav {
+    font-family: 'Inder';
+    font-size: 16px;
+}
+#top_nav {
+    font-family: 'Inder';
+    top: -2;
+    font-weight: bold;
+}
+#nav_element{
+    background-color: #e3f2fd;
+    border-radius: 10px;
+    padding: 10px;
+}
+table {
+    text-align: left;
+    position: relative;
+    border-collapse: collapse;
+    background-color: #edeef5;
+    font-weight: bold;
+    text-align: center;
+}
+th {
+    background: white;
+    position: sticky;
+    top: 50;
+    box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.7);
+}
+#cases{
+    color: #6f7075;
+    font-weight: bold;
+}
+#deaths{
+    color: red;
+    font-weight: bold;
+}
+#recovered{
+    color: #56e319;
+    font-weight: bold;
+}
+#affectedCountries{
+    font-weight: bold;
+}
+#search{
+    width: 300px;
+    margin-left: auto;
+}
+table, input {
+    margin: 10px;
+    float: right;
+}
+#container_geo_bubble{
+    animation: fadeInAnimation ease 5s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+    height: 570px;
+    width: 100%;
+}
+#top{
+    animation: fadeInAnimation ease 6s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+    text-align: center;
+}
+#resp-table{
+    width: 100%;
+    display: table;
+    animation: fadeInAnimation ease 7s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+}
+@keyframes fadeInAnimation {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+.spinner {
+    width: 40px;
+    height: 40px;
+    background-color: #333;
+    position: absolute;
+    top: 48%;
+    left: 48%;
+    -webkit-animation: sk-rotateplane 1.2s infinite ease-in-out;
+    animation: sk-rotateplane 1.2s infinite ease-in-out;
+}
+.spinner-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ff6347;
+    z-index: 999999;
+}
+@-webkit-keyframes sk-rotateplane {
+    0% {
+        -webkit-transform: perspective(120px) 
+}
+    50% {
+        -webkit-transform: perspective(120px) rotateY(180deg) 
+}
+    100% {
+        -webkit-transform: perspective(120px) rotateY(180deg) rotateX(180deg) 
+}
+}
+@keyframes sk-rotateplane {
+    0% {
+        transform: perspective(120px) rotateX(0deg) rotateY(0deg);
+        -webkit-transform: perspective(120px) rotateX(0deg) rotateY(0deg)
+}
+    50% {
+        transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg);
+        -webkit-transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg)
+}
+    100% {
+        transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
+        -webkit-transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
+    }
+}
+@media screen and (max-width: 1024px) {
+    table {
+    font-size: 10px;
+    }
+}
+#header-nav, #nav_element, th, .navbar-toggler{
+background: rgb(149,207,249);
+background: -moz-linear-gradient(top,  rgba(149,207,249,1) 0%, rgba(123,237,225,1) 52%, rgba(118,240,193,1) 100%);
+background: -webkit-linear-gradient(top,  rgba(149,207,249,1) 0%,rgba(123,237,225,1) 52%,rgba(118,240,193,1) 100%);
+background: linear-gradient(to bottom,  rgba(149,207,249,1) 0%,rgba(123,237,225,1) 52%,rgba(118,240,193,1) 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#95cff9', endColorstr='#76f0c1',GradientType=0 );
+background-size: 350% 350%;
+animation: waveColors 5s ease infinite;
+}
+@-webkit-keyframes waveColors {
+    0% {
+    background-position: 0% 7%;
+    }
+    50% {
+    background-position: 100% 94%;
+    }
+    100% {
+    background-position: 0% 7%;
+    }
+}
+@keyframes waveColors {
+    0% {
+    background-position: 0% 7%;
+    }
+    50% {
+    background-position: 100% 94%;
+    }
+    100% {
+    background-position: 0% 7%;
+    }
+}
+</style>

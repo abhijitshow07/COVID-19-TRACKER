@@ -1,0 +1,739 @@
+<head>
+	<meta charset="utf-8">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+	<title>COVID-19 Historical Data</title>
+    <link rel = "icon" href = "../static/img/corona.png" type = "image/x-icon">
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-167172502-2"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-167172502-2');
+    </script>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+	<!-- <script src="https://code.highcharts.com/highcharts.js"></script> -->
+	<!-- <script src="https://code.highcharts.com/highcharts-more.js"></script> -->
+
+	<script src="https://code.highcharts.com/maps/highmaps.js"></script>
+	<script src="https://code.highcharts.com/maps/modules/data.js"></script>
+	<script src="https://code.highcharts.com/maps/modules/exporting.js"></script>
+	<script src="https://code.highcharts.com/maps/modules/offline-exporting.js"></script>
+	<script src="https://code.highcharts.com/mapdata/custom/world.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://github.com/downloads/lafeber/world-flags-sprite/flags32.css" />
+
+	<link href='https://fonts.googleapis.com/css?family=Autour One' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Inder' rel='stylesheet'>
+
+
+	<!-- <script src="bootstrap.js"></script> -->
+	<!-- <link rel="stylesheet" href="bootstrap.css"> -->
+
+    <nav class="navbar navbar-light" id="header-nav">
+      <div class="container-fluid">
+          <a class="navbar-brand" href="#"><img src="https://www.klyuniv.ac.in/images/KU_LOGO_png22.jpg"></a>
+          <h1 style="color:#171280;">COVID-19 HISTORICAL DATA</h1>
+      </div>
+      <div class="container-fluid" id="depatment">
+            <a class="navbar-brand" href="#"></a>
+            <h5 align="right">DEPT. OF STATISTICS, UNIVERSITY OF KALYANI</h5>
+        </div>
+    </nav>
+
+    <nav class="nav navbar navbar-right navbar-expand-lg navbar-light bg-light sticky-top" id="top_nav">
+      <a class="navbar-brand" href="/" style="font-weight: bold;">COVID-19 TRACKER</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav container">
+            <a class="nav-item nav-link"  href="/" >Home</a>
+            <a class="nav-item nav-link"  href="/india" target="_blank">India Tracker</a>
+            <a class="nav-item nav-link"  href="/index_graph">Graphs</a>
+            <a class="nav-item nav-link"  href="/index_sentiment">Sentiment Analysis</a>
+            <a class="nav-item nav-link"  href="/index_news">News</a>
+            <li><a class="nav-item nav-link active" id="nav_element" href="/index_historical">Historical Data<span class="sr-only">(current)</span></a></li>
+            <a class="nav-item nav-link"  href="/index_predictions">Predictions</a>
+            <a class="nav-item nav-link"  href="/about">About</a>
+        </div>
+      </div>
+    </nav>
+
+</head>
+<html>
+<body>
+
+<div class="spinner-wrapper">
+  <div class="spinner"></div>
+</div>
+
+<div id="container"></div>
+<div id="play-controls">
+    <button id="play-pause-button" class="fa fa-play" title="play"></button>
+    <input id="play-range" type="range" value="0" min="0" max="0" />
+    <output id="play-output" for="play-range" name="year"></output>
+</div>
+<h5 style="text-align: center;">Click the Play/Pause Button</h5>
+<h6 style="text-align: center;">Hover Over any Country to check the number of Cases at that Date</h6>
+<br style="line-height: 3" >
+<hr class="rounded">
+
+<br style="line-height: 3" >
+<h5 style="text-align: center;">Select Country To View Historical Time Series of Cases/Deaths/Recovered</h5>
+<br style="line-height: 3" >
+<div class="container-fluid" style="width: 450px;" align="center" id="mycontainer">
+    <select class="form-control" id="country">
+    <option value="" disabled selected>Choose your country</option>
+    <option value="999">World</option>
+    </select>
+    <br>
+    <a class="btn btn-outline-primary" onclick="global_predictions()">Submit</a>
+</div>
+<br>
+<div class="container" id="resp-table"></div>
+<br>
+
+</body>
+</html>
+
+<script>
+function country_list() {
+    $.ajax({
+        url: "/get_country_list",
+        type: 'GET',
+        dataType: 'json', // added data type
+        cache: false,
+        success: function(response) {
+            console.log(response);
+
+            for (i = 0; i < response.length; i++) {
+                dropdown = document.getElementById('country')
+
+                option = document.createElement('option');
+                option.value = i;
+                option.innerHTML = response[i];
+
+                dropdown.appendChild(option)
+            }
+
+        }
+    })
+}
+
+function global_predictions() 
+{
+
+    selected_option = document.getElementById("country").value;
+    selected_data = {
+        "index": selected_option
+    }
+    if(selected_option != 999){
+    $.ajax({
+        url: "/get_country_data",
+        type: 'POST',
+        dataType: 'json', // added data type
+        data: JSON.stringify(selected_data),
+        cache: false,
+        // contentType: "application/json; charset=utf-8",
+        // traditional: true,
+        success: function(response) {
+            console.log(response)
+
+            resp_table = document.getElementById("resp-table")
+            $('#resp-table').empty();
+
+            //Creating Chart div
+            // chart_div = document.createElement('div');
+            // chart_div.setAttribute("class", "container");
+            div_line = document.createElement('div');
+            div_line.id = "container_line";
+            div_line.setAttribute("class", "container");
+            // chart_div.appendChild(div_line)
+            resp_table.appendChild(div_line)
+
+            $("#resp-table").append("<br/>");
+
+            header = ["Dates","Cases","Deaths","Recovered"];
+            dates = [];
+            for (i = 0; i < response["cases"].length; i++) {
+                dates.push(Object.keys(response["cases"][i])[0])
+            }
+
+            table = document.createElement('table');
+            table.id = "original";
+            table.setAttribute("class", "table table-hover table-bordered table-fixed");
+            tr = document.createElement('tr');
+            thead = document.createElement('thead');
+            for (let i = 0; i < header.length; i++) {
+                th = document.createElement('th');
+                Node = document.createTextNode(header[i]);
+                th.appendChild(Node)
+                tr.appendChild(th)
+            }
+            thead.appendChild(tr)
+            table.appendChild(thead)
+
+
+            cases_original = [];
+            deaths_original = [];
+            recovered_original = []
+
+            tbody = document.createElement('tbody');
+
+            for (i = 0; i < response["cases"].length; i++) {
+                cases_original.push(Object.values(response["cases"][i])[0])
+                deaths_original.push(Object.values(response["deaths"][i])[0])
+                recovered_original.push(Object.values(response["recovered"][i])[0])
+
+                tr = document.createElement('tr');
+
+                td_dates = document.createElement('td');
+                td_cases = document.createElement('td');
+                td_deaths = document.createElement('td');
+                td_recovered = document.createElement('td');
+
+                Node_dates = document.createTextNode(dates[i]);
+                Node_cases = document.createTextNode(cases_original[i].toLocaleString());
+                Node_deaths = document.createTextNode(deaths_original[i].toLocaleString());
+                Node_recovered = document.createTextNode(recovered_original[i].toLocaleString());
+
+                td_dates.appendChild(Node_dates)
+                td_cases.appendChild(Node_cases)
+                td_deaths.appendChild(Node_deaths)
+                td_recovered.appendChild(Node_recovered)
+
+                tr.appendChild(td_dates)
+                tr.appendChild(td_cases)
+                tr.appendChild(td_deaths)
+                tr.appendChild(td_recovered)
+
+                tbody.appendChild(tr)
+            }
+            table.appendChild(tbody)
+            resp_table.appendChild(table)
+
+            line_chart(response["country"],dates,cases_original,deaths_original,recovered_original)
+        }
+    });
+}
+
+
+else{
+    $.ajax({
+        url: "/get_world_original",
+        type: 'GET',
+        dataType: 'json', // added data type
+        cache: false,
+        success: function(response) {
+            console.log(response)
+
+            resp_table = document.getElementById("resp-table")
+            $('#resp-table').empty();
+
+            //Creating Chart div
+            // chart_div = document.createElement('div');
+            // chart_div.setAttribute("class", "container");
+            div_line = document.createElement('div');
+            div_line.id = "container_line";
+            div_line.setAttribute("class", "container");
+            // chart_div.appendChild(div_line)
+            resp_table.appendChild(div_line)
+
+            $("#resp-table").append("<br/>");
+
+            header = ["Dates","Cases","Deaths","Recovered"];
+            dates = [];
+            for (i = 0; i < response["cases"].length; i++) {
+                dates.push(Object.keys(response["cases"][i])[0])
+            }
+
+            table = document.createElement('table');
+            table.id = "original";
+            table.setAttribute("class", "table table-hover table-bordered table-fixed");
+            tr = document.createElement('tr');
+            thead = document.createElement('thead');
+            for (let i = 0; i < header.length; i++) {
+                th = document.createElement('th');
+                Node = document.createTextNode(header[i]);
+                th.appendChild(Node)
+                tr.appendChild(th)
+            }
+            thead.appendChild(tr)
+            table.appendChild(thead)
+
+
+            cases_original = [];
+            deaths_original = [];
+            recovered_original = []
+
+            tbody = document.createElement('tbody');
+
+            for (i = 0; i < response["cases"].length; i++) {
+                cases_original.push(Object.values(response["cases"][i])[0])
+                deaths_original.push(Object.values(response["deaths"][i])[0])
+                recovered_original.push(Object.values(response["recovered"][i])[0])
+
+                tr = document.createElement('tr');
+
+                td_dates = document.createElement('td');
+                td_cases = document.createElement('td');
+                td_deaths = document.createElement('td');
+                td_recovered = document.createElement('td');
+
+                Node_dates = document.createTextNode(dates[i]);
+                Node_cases = document.createTextNode(cases_original[i].toLocaleString());
+                Node_deaths = document.createTextNode(deaths_original[i].toLocaleString());
+                Node_recovered = document.createTextNode(recovered_original[i].toLocaleString());
+
+                td_dates.appendChild(Node_dates)
+                td_cases.appendChild(Node_cases)
+                td_deaths.appendChild(Node_deaths)
+                td_recovered.appendChild(Node_recovered)
+
+                tr.appendChild(td_dates)
+                tr.appendChild(td_cases)
+                tr.appendChild(td_deaths)
+                tr.appendChild(td_recovered)
+
+                tbody.appendChild(tr)
+            }
+            table.appendChild(tbody)
+            resp_table.appendChild(table)
+
+            line_chart("World",dates,cases_original,deaths_original,recovered_original)
+        }
+    });
+}
+}
+function line_chart(country,dates,cases,deaths,recovered){
+
+    Highcharts.chart('container_line', {
+                chart: {
+                    borderWidth: 0,
+                    borderRadius: 25
+                },
+                title: {
+                    text: country+' Cumulative Confirmed Coronavirus Cases/Deaths/Recovered'
+                },
+
+                subtitle: {
+                    text: 'Source: <a href="https://github.com/CSSEGISandData/COVID-19">Johns Hopkins CSSE</a>'
+                },
+
+                yAxis: {
+                    title: {
+                        text: 'Confirmed Cases/Deaths/Recovered'
+                    }
+                },
+
+                xAxis: {
+                    categories: dates
+                },
+
+                legend: {
+                    layout: 'vertical',
+                    align: 'right',
+                    verticalAlign: 'middle'
+                },
+
+                series: [{
+                    name: 'Cases',
+                    data: cases_original
+                }, {
+                    name: 'Deaths',
+                    data: deaths,
+                    color: "#ff3333"
+                },{
+                    name: 'Recovered',
+                    data: recovered,
+                    color: "#55ff33"
+                }],
+
+                responsive: {
+                    rules: [{
+                        condition: {
+                            maxWidth: 500
+                        },
+                        chartOptions: {
+                            legend: {
+                                layout: 'horizontal',
+                                align: 'center',
+                                verticalAlign: 'bottom'
+                            }
+                        }
+                    }]
+                }
+            });
+}
+
+$(function () {
+    $.ajax({
+        url: "/read_world_time_series",
+        type: 'GET',
+        dataType: 'json', // added data type
+        cache: false,
+        success: function(response) {
+        console.log(response)
+
+        motion_chart(response)
+}
+});
+});
+
+function motion_chart(response){
+
+        input = document.getElementById('play-range')
+        output = document.getElementById('play-output')
+
+        input.max = parseInt(response.length-1);
+        output.innerHTML = response[response.length-1]["name"]
+
+    var chart, dataSequence = response;
+
+        chart = Highcharts.mapChart('container', {
+                chart: {
+                    map: 'custom/world',
+                },
+
+                title: {
+                    text: 'Historical Confirmed Coronavirus Cases by Country'
+                },
+                subtitle: {
+                    text: 'Source: <a href="https://github.com/CSSEGISandData/COVID-19">Johns Hopkins CSSE</a>'
+                },
+                legend: {
+                    title: {
+                        text: 'Confirmed Cases',
+                        style: {
+                            color: ( // theme
+                                Highcharts.defaultOptions &&
+                                Highcharts.defaultOptions.legend &&
+                                Highcharts.defaultOptions.legend.title &&
+                                Highcharts.defaultOptions.legend.title.style &&
+                                Highcharts.defaultOptions.legend.title.style.color
+                            ) || 'black'
+                        }
+                    }
+                },
+
+                // mapNavigation: {
+                //     enabled: true
+                // },
+
+                tooltip: {
+                    backgroundColor: 'none',
+                    borderWidth: 0,
+                    shadow: false,
+                    useHTML: true,
+                    padding: 0,
+                    pointFormat: '<span style="font-size:20px" class="f32"><span class="flag {point.properties.hc-key}">' +
+                        '</span> {point.name}</span><br>' +
+                        '<span style="font-size:30px">{point.value}</span>',
+                    positioner: function() {
+                        return {
+                            x: 80,
+                            y: 450
+                        };
+                    }
+                },
+
+                colorAxis: {
+                    min: 1,
+                    max: 10000000,
+                    type: 'logarithmic'
+                },
+
+                series: [{
+                    data: dataSequence[response.length-1]["data"].slice(),
+                    joinBy: ['iso-a3', 'code3'],
+                    animation: true,
+                    name: 'Confirmed Cases',
+                    states: {
+                        hover: {
+                            color: '#a4edba'
+                        }
+                    }
+                }]
+            });
+
+    
+        /**
+     * Update the chart. This happens either on updating (moving) the range input,
+     * or from a timer when the timeline is playing.
+     */
+    function update(increment) {
+        var input = $('#play-range')[0],
+            output = $('#play-output')[0];
+
+        if (increment) {
+            input.value = parseInt(input.value) + increment;
+        }
+        chart.series[0].setData(dataSequence[input.value].data); // Increment dataset (updates chart)
+        output.innerHTML = dataSequence[input.value].name; // Output value
+        if (parseInt(input.value) >= parseInt(input.max)) { // Auto-pause
+            pause($('#play-pause-button')[0]);
+        }
+    }
+
+    /**
+     * Play the timeline.
+     */
+    function play(button) {
+        button.title = 'pause';
+        button.className = 'fa fa-pause';
+        chart.sequenceTimer = setInterval ( function () {
+            update(1);
+        }, 300)  
+        var input = $('#play-range')[0]
+        if(input.value == dataSequence.length-1)
+        {
+            input.value = 0
+        }
+    }
+    
+    /** 
+     * Pause the timeline, either when the range is ended, or when clicking the pause button.
+     * Pausing stops the timer and resets the button to play mode.
+     */
+    function pause(button) {
+        button.title = 'play';
+        button.className = 'fa fa-play';
+        clearTimeout(chart.sequenceTimer);
+        chart.sequenceTimer = undefined;
+    }
+    
+    /**
+     * Toggle play and pause from the button
+     */
+    $('#play-pause-button').bind('click', function () {
+        if (chart.sequenceTimer === undefined) {
+            play(this);
+        } else {
+            pause(this);
+        }
+    });
+    
+    /**
+     * Update the chart when the input is changed
+     */
+    $('#play-range').bind('input', function () {
+        update();
+    });
+}
+
+country_list();
+
+Highcharts.setOptions({
+    lang: {
+        thousandsSep: ','
+    }
+});
+
+$(document).ready(function() {
+    //Preloader
+    preloaderFadeOutTime = 700;
+
+    function hidePreloader() {
+        var preloader = $('.spinner-wrapper');
+        preloader.fadeOut(preloaderFadeOutTime);
+    }
+    hidePreloader();
+});
+</script>
+
+<style>
+@import "http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css";
+nav{
+    animation: fadeInAnimation ease 4s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+    font-family: 'Autour One';
+    font-size: 10px;
+}
+body {
+    font-family: 'Inder';
+}
+#top_nav{
+    font-family: 'Inder';
+    font-size: 16px;
+    top: -2;
+    font-weight: bold;
+}
+#nav_element{
+    background-color: #e3f2fd;
+    border-radius: 10px;
+    padding: 10px;
+}
+#container_line{
+    height: 500px;
+    border-radius: 25px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,1);
+    background-color: white;
+}
+table {
+    text-align: left;
+    position: relative;
+    border-collapse: collapse;
+    background-color: #edeef5;
+    font-weight: bold;
+}
+th, td {
+    padding: 0.25rem;
+    text-align: center;
+}
+th {
+    background: white;
+    position: sticky;
+    top: 50;
+    box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.7);
+}
+@keyframes fadeInAnimation {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+.spinner {
+    width: 40px;
+    height: 40px;
+    background-color: #333;
+    position: absolute;
+    top: 48%;
+    left: 48%;
+    -webkit-animation: sk-rotateplane 1.2s infinite ease-in-out;
+    animation: sk-rotateplane 1.2s infinite ease-in-out;
+}
+.spinner-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ff6347;
+    z-index: 999999;
+}
+@-webkit-keyframes sk-rotateplane {
+    0% {
+        -webkit-transform: perspective(120px) 
+}
+    50% {
+        -webkit-transform: perspective(120px) rotateY(180deg) 
+}
+    100% {
+        -webkit-transform: perspective(120px) rotateY(180deg) rotateX(180deg) 
+}
+}
+@keyframes sk-rotateplane {
+    0% {
+        transform: perspective(120px) rotateX(0deg) rotateY(0deg);
+        -webkit-transform: perspective(120px) rotateX(0deg) rotateY(0deg)
+}
+    50% {
+        transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg);
+        -webkit-transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg)
+}
+    100% {
+        transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
+        -webkit-transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
+    }
+}
+#container {
+    height: 650px;
+/*    min-width: 310px;
+    max-width: 800px;*/
+    width : 100%;
+    margin: 0 auto;
+}
+.loading {
+    margin-top: 10em;
+    text-align: center;
+    color: gray;
+}
+#play-controls {
+    text-align: center;
+    min-width: 310px;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 5px 0 1em 0;
+}
+#play-controls * {
+    display: inline-block;
+    vertical-align: middle;
+}
+#play-pause-button {
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    font-size: 15px;
+    cursor: pointer;
+    border: 1px solid silver;
+    border-radius: 3px;
+    background: #f8f8f8;
+}
+#play-range {
+    margin: 2.5%;
+    width: 70%;
+}
+#play-output {
+    font-family: Arial, Helvetica, sans-serif;
+}
+hr.dashed {
+  border-top: 3px dashed #bbb;
+}
+
+/* Dotted border */
+hr.dotted {
+  border-top: 3px dotted #bbb;
+}
+
+/* Solid border */
+hr.solid {
+  border-top: 3px solid #bbb;
+}
+
+/* Rounded border */
+hr.rounded {
+  border-top: 8px solid #bbb;
+  border-radius: 5px;
+}
+#header-nav, #nav_element, th, .navbar-toggler{
+background: rgb(149,207,249);
+background: -moz-linear-gradient(top,  rgba(149,207,249,1) 0%, rgba(123,237,225,1) 52%, rgba(118,240,193,1) 100%);
+background: -webkit-linear-gradient(top,  rgba(149,207,249,1) 0%,rgba(123,237,225,1) 52%,rgba(118,240,193,1) 100%);
+background: linear-gradient(to bottom,  rgba(149,207,249,1) 0%,rgba(123,237,225,1) 52%,rgba(118,240,193,1) 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#95cff9', endColorstr='#76f0c1',GradientType=0 );
+background-size: 350% 350%;
+animation: waveColors 5s ease infinite;
+}
+@-webkit-keyframes waveColors {
+  0% {
+    background-position: 0% 7%;
+  }
+  50% {
+    background-position: 100% 94%;
+  }
+  100% {
+    background-position: 0% 7%;
+  }
+}
+@keyframes waveColors {
+  0% {
+    background-position: 0% 7%;
+  }
+  50% {
+    background-position: 100% 94%;
+  }
+  100% {
+    background-position: 0% 7%;
+  }
+}
+</style>

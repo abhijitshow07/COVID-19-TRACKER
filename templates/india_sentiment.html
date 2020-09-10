@@ -1,0 +1,544 @@
+<head>
+	<meta charset="utf-8">
+  <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+	<title>India | COVID-19 Sentiment Analysis</title>
+  <link rel = "icon" href = "../static/img/corona.png" type = "image/x-icon">
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-167172502-2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-167172502-2');
+  </script>
+
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+	<!-- <script src="https://code.highcharts.com/highcharts.js"></script> -->
+	<!-- <script src="https://code.highcharts.com/highcharts-more.js"></script> -->
+
+	<script src="https://code.highcharts.com/maps/highmaps.js"></script>
+	<script src="https://code.highcharts.com/maps/modules/data.js"></script>
+	<script src="https://code.highcharts.com/maps/modules/exporting.js"></script>
+	<script src="https://code.highcharts.com/maps/modules/offline-exporting.js"></script>
+
+	<link href='https://fonts.googleapis.com/css?family=Autour One' rel='stylesheet'>
+  <link href='https://fonts.googleapis.com/css?family=Inder' rel='stylesheet'>
+
+	<!-- <script src="india.js"></script> -->
+	<!-- <link rel="stylesheet" href="india.css"> -->
+
+  <nav class="navbar navbar-light" id="header-nav">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#"><img src="https://www.klyuniv.ac.in/images/KU_LOGO_png22.jpg"></a>
+      <h1 style="color:#171280;">INDIA COVID-19 SENTIMENT ANALYSIS</h1>
+    </div>
+    <div class="container-fluid" id="depatment">
+        <a class="navbar-brand" href="#"></a>
+        <h5 align="right">DEPT. OF STATISTICS, UNIVERSITY OF KALYANI</h5>
+    </div>
+  </nav>
+
+  <nav class="nav navbar navbar-right navbar-expand-lg navbar-light bg-light sticky-top" id="top_nav">
+    <a class="navbar-brand" href="/india" style="font-weight: bold;">INDIA COVID-19 TRACKER</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav container">
+        <a class="nav-item nav-link"  href="/" >Home</a>
+        <a class="nav-item nav-link"  href="/india">India Tracker</a>
+        <a class="nav-item nav-link"  href="/india_graph">Graphs</a>
+        <li><a class="nav-item nav-link active" href="/india_sentiment" id="nav_element">Sentiment Analysis<span class="sr-only">(current)</span></a></li>
+        <a class="nav-item nav-link"  href="/india_news">News</a>
+        <a class="nav-item nav-link"  href="/india_predictions">Predictions</a>
+        <a class="nav-item nav-link"  href="/about">About</a>
+      </div>
+    </div>
+  </nav>
+
+</head>
+
+<html>
+<body>
+
+<div class="spinner-wrapper">
+  <div class="spinner"></div>
+</div>
+
+<br style = "line-height:5;" id="loader_space">
+<div class="cssload-thecube" id="loader">
+  <div class="cssload-cube cssload-c1"></div>
+  <div class="cssload-cube cssload-c2"></div>
+  <div class="cssload-cube cssload-c4"></div>
+  <div class="cssload-cube cssload-c3"></div>
+</div>
+<br>
+
+<h5 align="center" id="load_header">Fetching Tweets</h5>
+
+<div class="container">
+  <div class="col" id="container_semidonut"></div>
+  <div class="container" id="sentiment_div" style="visibility: hidden;">
+    <h6 style="font-weight: bold">Sentiment Analysis is the process of determining whether a piece of writing is positive, negative or neutral. A sentiment analysis system for text analysis combines natural language processing (NLP) and machine learning techniques to assign weighted sentiment scores to the entities, topics, themes and categories within a sentence or phrase.</h6>
+  </div>
+  <br>
+  <div class="col" align="center"><img id = wordcloud></div>
+  <br>
+  <div class="container" id="wordcloud_div" style="visibility: hidden;">
+    <h6 style="font-weight: bold">A word cloud (wordle or weighted list in visual design) is a novelty visual representation of text data, typically used to depict keyword metadata (tags) on websites, or to visualize free form text. Tags are usually single words, and the importance of each tag is shown with font size or color. This format is useful for quickly perceiving the most prominent terms to determine its relative prominence. When used as website navigation aids, the terms are hyperlinked to items associated with the tag.</h6>
+  </div>
+</div>
+<br>
+<div class="container" id="resp-table">
+	<table id="coronavirus" class ="table table-hover table-bordered table-fixed"></table>
+</div>
+</body>
+</html>
+
+<script>
+	
+function get_tweets() {
+    $.ajax({
+        url: "/get_india_tweets",
+        type: 'GET',
+        dataType: 'json', // added data type
+        cache: false,
+        success: function(response) {
+            console.log(response)
+
+            $('#loader').fadeOut(600);
+            $('#load_header').fadeOut(600);
+            $('#loader_space').fadeOut(600);
+            document.getElementById("sentiment_div").style.visibility = 'visible';
+            document.getElementById("wordcloud_div").style.visibility = 'visible';
+
+
+            header = ["#", "Name", "Tweet", "Sentiment"]
+
+            table = document.getElementById('coronavirus');
+            tr = document.createElement('tr');
+            thead = document.createElement('thead');
+            for (let i = 0; i < header.length; i++) {
+                th = document.createElement('th');
+                Node = document.createTextNode(header[i]);
+                th.appendChild(Node)
+                tr.appendChild(th)
+            }
+            thead.appendChild(tr)
+            table.appendChild(thead)
+
+            tbody = document.createElement('tbody');
+            for (i = 1; i < response.length; i++) {
+                tr = document.createElement('tr');
+                for (j = 0; j < Object.values(response[i]).length; j++) {
+                    td = document.createElement('td');
+                    num = Object.values(response[i])[j];
+                    if (j == 3) {
+                        if (num == "Negative") {
+                            td.style.backgroundColor = "#ff4040";
+                        } else if (num == "Positive") {
+                            td.style.backgroundColor = "#38b6d6";
+                        } else {
+                            td.style.backgroundColor = "#60e352";
+                        }
+                    } else if (j == 2) {
+                        img = document.createElement('img');
+                        img.src = "../static/img/twitter.png"
+                        img.height = "30";
+                        img.width = "30";
+                        td.appendChild(img)
+                    }
+                    Node = document.createTextNode(num);
+                    td.appendChild(Node)
+                    tr.appendChild(td)
+                }
+                tbody.appendChild(tr)
+            }
+            table.appendChild(tbody)
+            positive = 0;
+            negative = 0;
+            neutral = 0;
+            for (i = 0; i < response.length; i++) {
+                if (response[i]["tweet_sentiment"] == "Positive") {
+                    positive++;
+                } else if (response[i]["tweet_sentiment"] == "Negative") {
+                    negative++;
+                } else if (response[i]["tweet_sentiment"] == "Neutral") {
+                    neutral++;
+                }
+            }
+            wordcloud_image = document.getElementById('wordcloud');
+            wordcloud_image.src = response[0]["image_location"];
+            wordcloud_image.style.width = "80%";
+            wordcloud_image.style.height = "auto";
+
+            Highcharts.chart('container_semidonut', {
+                chart: {
+                    plotBackgroundColor: null,
+                    plotBorderWidth: 0,
+                    plotShadow: false
+                },
+                title: {
+                    text: 'Sentiment<br>Analysis',
+                    align: 'center',
+                    verticalAlign: 'middle',
+                    y: 60
+                },
+                tooltip: {
+                    pointFormat: '<b>{point.percentage:.1f}%</b>'
+                },
+                accessibility: {
+                    point: {
+                        valueSuffix: '%'
+                    }
+                },
+                plotOptions: {
+                    pie: {
+                        dataLabels: {
+                            enabled: true,
+                            distance: -50,
+                            style: {
+                                fontWeight: 'bold',
+                                color: 'white'
+                            }
+                        },
+                        startAngle: -90,
+                        endAngle: 90,
+                        center: ['50%', '75%'],
+                        size: '110%'
+                    }
+                },
+                series: [{
+                    type: 'pie',
+                    name: '',
+                    innerSize: '50%',
+                    data: [
+                        ['Positive', positive],
+                        ['Negative', negative],
+                        ['Neutral', neutral],
+                    ]
+                }]
+            });
+
+        }
+    })
+}
+get_tweets();
+
+$(document).ready(function() {
+    //Preloader
+    preloaderFadeOutTime = 700;
+
+    function hidePreloader() {
+        var preloader = $('.spinner-wrapper');
+        preloader.fadeOut(preloaderFadeOutTime);
+    }
+    hidePreloader();
+});
+
+</script>
+
+<style>
+body{
+  font-family: 'Inder';
+}
+nav{
+  animation: fadeInAnimation ease 4s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  font-family: 'Autour One';
+  font-size: 10px;
+}
+#top_nav{
+    font-family: 'Inder';
+    font-size: 16px;
+    top: -2;
+    font-weight: bold;
+}
+#nav_element{
+    background-color: #e3f2fd;
+    border-radius: 10px;
+    padding: 10px;
+}
+#sentiment_div, #wordcloud_div{
+  border-left: thick double #171280;
+  text-align: left;
+  background-color: #e3f2fd;
+  visibility: hidden;
+}
+@keyframes fadeInAnimation {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+th, td {
+  padding: 0.25rem;
+  text-align: center;
+}
+th {
+  background: white;
+  position: sticky;
+  top: 50;
+  box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.7);
+}
+#resp-table {
+  width: 100%;
+  display: table;
+}
+table {
+  margin: 10px;
+  float: right;
+  text-align: left;
+  position: relative;
+  border-collapse: collapse;
+  background-color: #edeef5;
+  font-weight: bold;
+}
+.spinner {
+  width: 40px;
+  height: 40px;
+  background-color: #333;
+  position: absolute;
+  top: 48%;
+  left: 48%;
+  -webkit-animation: sk-rotateplane 1.2s infinite ease-in-out;
+  animation: sk-rotateplane 1.2s infinite ease-in-out;
+}
+.spinner-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ff6347;
+  z-index: 999999;
+}
+@-webkit-keyframes sk-rotateplane {
+  0% {
+    -webkit-transform: perspective(120px) 
+}
+  50% {
+    -webkit-transform: perspective(120px) rotateY(180deg) 
+}
+  100% {
+    -webkit-transform: perspective(120px) rotateY(180deg) rotateX(180deg) 
+}
+}
+@keyframes sk-rotateplane {
+  0% {
+    transform: perspective(120px) rotateX(0deg) rotateY(0deg);
+    -webkit-transform: perspective(120px) rotateX(0deg) rotateY(0deg)
+}
+  50% {
+    transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg);
+    -webkit-transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg)
+}
+  100% {
+    transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
+    -webkit-transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
+  }
+}
+.cssload-thecube {
+  width: 73px;
+  height: 73px;
+  margin: 0 auto;
+  margin-top: 49px;
+  position: relative;
+  transform: rotateZ(45deg);
+  -o-transform: rotateZ(45deg);
+  -ms-transform: rotateZ(45deg);
+  -webkit-transform: rotateZ(45deg);
+  -moz-transform: rotateZ(45deg);
+}
+.cssload-thecube .cssload-cube {
+  position: relative;
+  transform: rotateZ(45deg);
+  -o-transform: rotateZ(45deg);
+  -ms-transform: rotateZ(45deg);
+  -webkit-transform: rotateZ(45deg);
+  -moz-transform: rotateZ(45deg);
+}
+.cssload-thecube .cssload-cube {
+  float: left;
+  width: 50%;
+  height: 50%;
+  position: relative;
+  transform: scale(1.1);
+  -o-transform: scale(1.1);
+  -ms-transform: scale(1.1);
+  -webkit-transform: scale(1.1);
+  -moz-transform: scale(1.1);
+}
+.cssload-thecube .cssload-cube:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgb(43,160,199);
+  animation: cssload-fold-thecube 2.76s infinite linear both;
+  -o-animation: cssload-fold-thecube 2.76s infinite linear both;
+  -ms-animation: cssload-fold-thecube 2.76s infinite linear both;
+  -webkit-animation: cssload-fold-thecube 2.76s infinite linear both;
+  -moz-animation: cssload-fold-thecube 2.76s infinite linear both;
+  transform-origin: 100% 100%;
+  -o-transform-origin: 100% 100%;
+  -ms-transform-origin: 100% 100%;
+  -webkit-transform-origin: 100% 100%;
+  -moz-transform-origin: 100% 100%;
+}
+.cssload-thecube .cssload-c2 {
+  transform: scale(1.1) rotateZ(90deg);
+  -o-transform: scale(1.1) rotateZ(90deg);
+  -ms-transform: scale(1.1) rotateZ(90deg);
+  -webkit-transform: scale(1.1) rotateZ(90deg);
+  -moz-transform: scale(1.1) rotateZ(90deg);
+}
+.cssload-thecube .cssload-c3 {
+  transform: scale(1.1) rotateZ(180deg);
+  -o-transform: scale(1.1) rotateZ(180deg);
+  -ms-transform: scale(1.1) rotateZ(180deg);
+  -webkit-transform: scale(1.1) rotateZ(180deg);
+  -moz-transform: scale(1.1) rotateZ(180deg);
+}
+.cssload-thecube .cssload-c4 {
+  transform: scale(1.1) rotateZ(270deg);
+  -o-transform: scale(1.1) rotateZ(270deg);
+  -ms-transform: scale(1.1) rotateZ(270deg);
+  -webkit-transform: scale(1.1) rotateZ(270deg);
+  -moz-transform: scale(1.1) rotateZ(270deg);
+}
+.cssload-thecube .cssload-c2:before {
+  animation-delay: 0.35s;
+  -o-animation-delay: 0.35s;
+  -ms-animation-delay: 0.35s;
+  -webkit-animation-delay: 0.35s;
+  -moz-animation-delay: 0.35s;
+}
+.cssload-thecube .cssload-c3:before {
+  animation-delay: 0.69s;
+  -o-animation-delay: 0.69s;
+  -ms-animation-delay: 0.69s;
+  -webkit-animation-delay: 0.69s;
+  -moz-animation-delay: 0.69s;
+}
+.cssload-thecube .cssload-c4:before {
+  animation-delay: 1.04s;
+  -o-animation-delay: 1.04s;
+  -ms-animation-delay: 1.04s;
+  -webkit-animation-delay: 1.04s;
+  -moz-animation-delay: 1.04s;
+}
+@keyframes cssload-fold-thecube {
+  0%, 10% {
+    transform: perspective(136px) rotateX(-180deg);
+    opacity: 0;
+  }
+  25%,75% {
+    transform: perspective(136px) rotateX(0deg);
+    opacity: 1;
+  }
+  90%,100% {
+    transform: perspective(136px) rotateY(180deg);
+    opacity: 0;
+  }
+}
+@-o-keyframes cssload-fold-thecube {
+  0%, 10% {
+    -o-transform: perspective(136px) rotateX(-180deg);
+    opacity: 0;
+  }
+  25%,75% {
+    -o-transform: perspective(136px) rotateX(0deg);
+    opacity: 1;
+  }
+  90%,100% {
+    -o-transform: perspective(136px) rotateY(180deg);
+    opacity: 0;
+  }
+}
+@-ms-keyframes cssload-fold-thecube {
+  0%, 10% {
+    -ms-transform: perspective(136px) rotateX(-180deg);
+    opacity: 0;
+  }
+  25%,75% {
+    -ms-transform: perspective(136px) rotateX(0deg);
+    opacity: 1;
+  }
+  90%,100% {
+    -ms-transform: perspective(136px) rotateY(180deg);
+    opacity: 0;
+  }
+}
+@-webkit-keyframes cssload-fold-thecube {
+  0%, 10% {
+    -webkit-transform: perspective(136px) rotateX(-180deg);
+    opacity: 0;
+  }
+  25%,75% {
+    -webkit-transform: perspective(136px) rotateX(0deg);
+    opacity: 1;
+  }
+  90%,100% {
+    -webkit-transform: perspective(136px) rotateY(180deg);
+    opacity: 0;
+  }
+}
+@-moz-keyframes cssload-fold-thecube {
+  0%, 10% {
+    -moz-transform: perspective(136px) rotateX(-180deg);
+    opacity: 0;
+  }
+  25%,75% {
+    -moz-transform: perspective(136px) rotateX(0deg);
+    opacity: 1;
+  }
+  90%,100% {
+    -moz-transform: perspective(136px) rotateY(180deg);
+    opacity: 0;
+  }
+}
+#header-nav, #nav_element, th, .navbar-toggler{
+background: rgb(149,207,249);
+background: -moz-linear-gradient(top,  rgba(149,207,249,1) 0%, rgba(123,237,225,1) 52%, rgba(118,240,193,1) 100%);
+background: -webkit-linear-gradient(top,  rgba(149,207,249,1) 0%,rgba(123,237,225,1) 52%,rgba(118,240,193,1) 100%);
+background: linear-gradient(to bottom,  rgba(149,207,249,1) 0%,rgba(123,237,225,1) 52%,rgba(118,240,193,1) 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#95cff9', endColorstr='#76f0c1',GradientType=0 );
+background-size: 350% 350%;
+animation: waveColors 5s ease infinite;
+}
+@-webkit-keyframes waveColors {
+  0% {
+    background-position: 0% 7%;
+  }
+  50% {
+    background-position: 100% 94%;
+  }
+  100% {
+    background-position: 0% 7%;
+  }
+}
+
+@keyframes waveColors {
+  0% {
+    background-position: 0% 7%;
+  }
+  50% {
+    background-position: 100% 94%;
+  }
+  100% {
+    background-position: 0% 7%;
+  }
+}
+</style>
