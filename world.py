@@ -12,7 +12,7 @@ import requests
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from fbprophet import Prophet
+# from fbprophet import Prophet
 import math
 import time
 import calendar
