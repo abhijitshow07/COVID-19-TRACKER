@@ -9,4 +9,7 @@ Here we have displayed the data from the world as a whole and also country wise.
 We didn't just stop at displaying the data but went ahead and made predictions for values of total confirmed cases, deaths and recovered for both India and the world. We obtained our predictions by using a Facebook Prophet model. Facebook Prophet is an excellent time series model developed by Facebook. It is fast and simple it also automatically takes into account the crucial time points in the data provided. Using this model, we have obtained appreciable accuracy in India predictions and excellent accuracy in world predictions. The predictions are displayed under Predictions.<br><br>
 Our joys would know no bounds if our humble effort comes of any use to anyone battling this global pandemic. It is our utmost desire that we overcome this situation with unity and fraternity.</h4>
 <h2>Pages for Global Tracker</h2>
-- [Home Page](http://3.6.38.122:5000/).
+<ul>
+  <li><h3><a href="http://3.6.38.122:5000/" target="_blank">Home Page</a></h3></li>
+  <li><h3><a href="http://3.6.38.122:5000/index_graph" target="_blank">Graphs</a></h3></li>
+ </ul>
