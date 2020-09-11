@@ -12,4 +12,28 @@ Our joys would know no bounds if our humble effort comes of any use to anyone ba
 <ul>
   <li><h3><a href="http://3.6.38.122:5000/" target="_blank">Home Page</a></h3></li>
   <li><h3><a href="http://3.6.38.122:5000/index_graph" target="_blank">Graphs</a></h3></li>
- </ul>
+  <li><h3><a href="http://3.6.38.122:5000/index_sentiment" target="_blank">Sentiment Analysis</a></h3></li>
+  <li><h3><a href="http://3.6.38.122:5000/index_news" target="_blank">News</a></h3></li>
+  <li><h3><a href="http://3.6.38.122:5000/index_historical" target="_blank">Historical Data</a></h3></li>
+  <li><h3><a href="http://3.6.38.122:5000/index_predictions" target="_blank">Predictions</a></h3></li>
+  <li><h3><a href="http://3.6.38.122:5000/about" target="_blank">About</a></h3></li>
+</ul>
+<h2>Pages for India Tracker</h2>
+<ul>
+  <li><h3><a href="http://3.6.38.122:5000/india" target="_blank">India Tracker</a></h3></li>
+  <li><h3><a href="http://3.6.38.122:5000/india_graph" target="_blank">India Graphs</a></h3></li>
+  <li><h3><a href="http://3.6.38.122:5000/india_sentiment" target="_blank">India Sentiment Analysis</a></h3></li>
+  <li><h3><a href="http://3.6.38.122:5000/india_news" target="_blank">India News</a></h3></li>
+  <li><h3><a href="http://3.6.38.122:5000/india_predictions" target="_blank">India Predictions</a></h3></li>
+  <li><h3><a href="http://3.6.38.122:5000/about" target="_blank">About</a></h3></li>
+</ul>
+<h2>HOME PAGE</h2>
+<div style="text-align:center"><img src="/project_imgs/bubble_chart.png" /></div>
+<ul>
+  <li><h4>Bubble chart showing the Covid-19 hotspots around the world.</h4></li>
+  <li><h4>Live total confirmed Covid-19 cases, deaths, recovered and affected countries.</h4></li>
+</ul>
+<div style="text-align:center"><img src="/project_imgs/home_table.png" /></div>
+<ul>
+  <li><h4>A table showing live total confirmed cases, new cases, active cases, cases per one million population, total deaths, new deaths, deaths per one million, total recovered, recovered per one million population, serious/critical cases, total tests, tests per one million population for each affected country in descending order.</h4></li>
+</ul>
