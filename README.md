@@ -43,3 +43,4 @@ Our joys would know no bounds if our humble effort comes of any use to anyone ba
   <li><h4>Live total confirmed Covid-19 cases, deaths, recovered in affected states.</h4></li>
   <li><h4>A table showing live total confirmed cases, new cases, total confirmed deaths, new deaths, total confirmed recovered, new recovered, active cases.</h4></li>
 </ul>
+<h3>For more information please refer Project Abstract & Description.pdf</h3>
