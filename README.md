@@ -37,3 +37,9 @@ Our joys would know no bounds if our humble effort comes of any use to anyone ba
 <ul>
   <li><h4>A table showing live total confirmed cases, new cases, active cases, cases per one million population, total deaths, new deaths, deaths per one million, total recovered, recovered per one million population, serious/critical cases, total tests, tests per one million population for each affected country in descending order.</h4></li>
 </ul>
+<h2>INDIA TRACKER</h2>
+<div style="text-align:center"><img src="/project_imgs/india_page.png" /></div>
+<ul>
+  <li><h4>Live total confirmed Covid-19 cases, deaths, recovered in affected states.</h4></li>
+  <li><h4>A table showing live total confirmed cases, new cases, total confirmed deaths, new deaths, total confirmed recovered, new recovered, active cases.</h4></li>
+</ul>
