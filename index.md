@@ -14,7 +14,7 @@ Syntax highlighted code block
 # Header 1
 ## Header 2
 ### Header 3
-
+<div style="text-align:center"><img src="/../project_imgs/home_page.png" /></div>
 - Bulleted
 - List
 
