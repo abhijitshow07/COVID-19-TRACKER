@@ -18,6 +18,7 @@ app = Flask(__name__)
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
 @app.route('/')
+@app.route('/home')
 @cross_origin()
 def home():
     return render_template('index.html')
