@@ -4,7 +4,6 @@ Created on Sun May 17 14:48:16 2020
 
 @author: SAYAN GUHA ROY
 """
-#final program for corona
 
 
 import json
