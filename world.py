@@ -87,6 +87,7 @@ def india_world_pred():
     fig = m.plot(forecast)
     location = "static/img/plot/india_plot_cases" + str(date.today()) + ".png"
     plot_locations = plot_locations + [location]
+    fig.legend(("actual","fitted","80% confidence interval"),loc='center right',fontsize=10)
     plt.savefig(location,figsize=(15,7),dpi=250)
     
     fig = m.plot_components(forecast)
@@ -114,6 +115,7 @@ def india_world_pred():
     fig = m.plot(forecast)
     location = "static/img/plot/india_plot_deaths" + str(date.today()) + ".png"
     plot_locations = plot_locations + [location]
+    fig.legend(("actual","fitted","80% confidence interval"),loc='center right',fontsize=10)
     plt.savefig(location,figsize=(15,7),dpi=250)
     
     fig = m.plot_components(forecast)
@@ -141,6 +143,7 @@ def india_world_pred():
     fig = m.plot(forecast)
     location = "static/img/plot/india_plot_recovered" + str(date.today()) + ".png"
     plot_locations = plot_locations + [location]
+    fig.legend(("actual","fitted","80% confidence interval"),loc='center right',fontsize=10)
     plt.savefig(location,figsize=(15,7),dpi=250)
     
     fig = m.plot_components(forecast)
@@ -246,6 +249,7 @@ def india_world_pred():
     fig = m.plot(forecast)
     location = "static/img/plot/world_plot_cases" + str(date.today()) + ".png"
     plot_locations = plot_locations + [location]
+    fig.legend(("actual","fitted","80% confidence interval"),loc='center right',fontsize=10)
     plt.savefig(location,figsize=(15,7),dpi=250)
     
     fig = m.plot_components(forecast)
@@ -281,6 +285,7 @@ def india_world_pred():
     fig = m.plot(forecast)
     location = "static/img/plot/world_plot_deaths" + str(date.today()) + ".png"
     plot_locations = plot_locations + [location]
+    fig.legend(("actual","fitted","80% confidence interval"),loc='center right',fontsize=10)
     plt.savefig(location,figsize=(15,7),dpi=250)
     
     fig = m.plot_components(forecast)
@@ -309,6 +314,7 @@ def india_world_pred():
     fig = m.plot(forecast)
     location = "static/img/plot/world_plot_recovered" + str(date.today()) + ".png"
     plot_locations = plot_locations + [location]
+    fig.legend(("actual","fitted","80% confidence interval"),loc='center right',fontsize=10)
     plt.savefig(location,figsize=(15,7),dpi=250)
     
     fig = m.plot_components(forecast)
