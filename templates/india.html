@@ -103,6 +103,8 @@ function india_covid19() {
             document.getElementById('deaths').innerHTML = "<i id='icon' class='fas fa-lungs-virus'></i> Deaths: " + parseInt(new_response[0]["deaths"]).toLocaleString();
             document.getElementById('recovered').innerHTML = "<i id='icon' class='fas fa-shield-virus'></i> Recovered: " + parseInt(new_response[0]["recovered"]).toLocaleString();
             document.getElementById('affectedStates').innerHTML = "<i id='icon' class='fas fa-globe-americas'></i> Affected States: " + (new_response.length - 2)
+            updated = new_response[0]["lastupdatedtime"]
+            document.getElementById('updated').innerHTML = "Updated: " + new Date(updated.substring(6,10)+"-"+updated.substring(3,5)+"-"+updated.substring(0,2)+updated.substring(10,));
 
             table = document.getElementById('coronavirus');
             tr = document.createElement('tr');
