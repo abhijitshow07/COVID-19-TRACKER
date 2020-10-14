@@ -53,6 +53,11 @@ def india_sentiment():
 def index_historical():
     return render_template('index_historical.html')
 
+@app.route('/india_historical')
+@cross_origin()
+def india_historical():
+    return render_template('india_historical.html')
+
 @app.route('/index_predictions')
 @cross_origin()
 def index_predictions():
