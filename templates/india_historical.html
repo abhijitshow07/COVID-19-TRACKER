@@ -1,0 +1,371 @@
+<head>
+	<meta charset="utf-8">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+	<title>India | COVID-19 Historical Data</title>
+    <link rel = "icon" href = "../static/img/corona.png" type = "image/x-icon">
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-178680966-1"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-178680966-1');
+    </script>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+	<!-- <script src="https://code.highcharts.com/highcharts.js"></script> -->
+	<!-- <script src="https://code.highcharts.com/highcharts-more.js"></script> -->
+
+	<script src="https://code.highcharts.com/maps/highmaps.js"></script>
+	<script src="https://code.highcharts.com/maps/modules/data.js"></script>
+	<script src="https://code.highcharts.com/maps/modules/exporting.js"></script>
+	<script src="https://code.highcharts.com/maps/modules/offline-exporting.js"></script>
+	<script src="https://code.highcharts.com/mapdata/custom/world.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://github.com/downloads/lafeber/world-flags-sprite/flags32.css" />
+
+	<link href='https://fonts.googleapis.com/css?family=Autour One' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Inder' rel='stylesheet'>
+
+
+	<!-- <script src="bootstrap.js"></script> -->
+	<!-- <link rel="stylesheet" href="bootstrap.css"> -->
+
+    <nav class="navbar navbar-light" id="header-nav">
+      <div class="container-fluid">
+          <a class="navbar-brand" href="#"><img src="https://www.klyuniv.ac.in/images/KU_LOGO_png22.jpg"></a>
+          <h1 style="color:#171280;">INDIA COVID-19 HISTORICAL DATA</h1>
+      </div>
+      <div class="container-fluid" id="depatment">
+            <a class="navbar-brand" href="#"></a>
+            <h5 align="right">DEPT. OF STATISTICS, UNIVERSITY OF KALYANI</h5>
+        </div>
+    </nav>
+
+    <nav class="nav navbar navbar-right navbar-expand-lg navbar-light bg-light sticky-top" id="top_nav">
+      <a class="navbar-brand" href="/" style="font-weight: bold;">COVID-19 TRACKER</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav container">
+            <a class="nav-item nav-link"  href="/" >Home</a>
+            <a class="nav-item nav-link"  href="/india" target="_blank">India Tracker</a>
+            <a class="nav-item nav-link"  href="/india_graph">Graphs</a>
+            <a class="nav-item nav-link"  href="/india_sentiment">Sentiment Analysis</a>
+            <a class="nav-item nav-link"  href="/india_news">News</a>
+            <li><a class="nav-item nav-link active" id="nav_element" href="/india_historical">Historical Data<span class="sr-only">(current)</span></a></li>
+            <a class="nav-item nav-link"  href="/india_predictions">Predictions</a>
+            <a class="nav-item nav-link"  href="/about">About</a>
+        </div>
+      </div>
+    </nav>
+
+</head>
+<html>
+<body>
+
+    <div class="spinner-wrapper">
+    <div class="spinner"></div>
+    </div>
+    <br>
+    <div class="container" style="margin: auto">
+        <div class="col" id="india_container_line"></div>
+    </div>
+    <br>
+    <div class="container" id="resp-table">
+        <table id="coronavirus" class ="table table-hover table-bordered table-fixed"></table>
+    </div>
+
+</body>
+</html>
+
+<script>
+    function india_covid19() {
+    $.ajax({
+        url: "https://api.covid19india.org/data.json",
+        type: 'GET',
+        dataType: 'json', // added data type
+        cache: false,
+        success: function(response) {
+            console.log(response)
+            new_response = response["cases_time_series"];
+            console.log(new_response)
+            // for (i = 0; i < response["statewise"].length; i++) {
+            //     if (response["statewise"][i]["confirmed"] != '0') {
+            //         new_response.push(response["statewise"][i])
+            //     }
+            // }
+            header = ["Dates", "Cases", "Deaths", "Recovered", "Daily Cases", "Daily Deaths", "Daily Recovered"];
+            table = document.getElementById('coronavirus');
+            tr = document.createElement('tr');
+            thead = document.createElement('thead');
+            for (let i = 0; i < header.length; i++) {
+                th = document.createElement('th');
+                Node = document.createTextNode(header[i]);
+                th.appendChild(Node)
+                tr.appendChild(th)
+            }
+            thead.appendChild(tr)
+            table.appendChild(thead)
+
+            cases = [];
+            deaths = [];
+            recovered = [];
+            dates = [];
+
+            tbody = document.createElement('tbody');
+
+            for(let i = 0 ; i < new_response.length ; i++){
+                cases.push(parseInt(new_response[i]["totalconfirmed"]))
+                deaths.push(parseInt(new_response[i]["totaldeceased"]))
+                recovered.push(parseInt(new_response[i]["totalrecovered"]))
+                dates.push(new_response[i]["date"]+"2020")
+
+                tr = document.createElement('tr');
+
+                td_dates = document.createElement('td');
+                td_cases = document.createElement('td');
+                td_deaths = document.createElement('td');
+                td_recovered = document.createElement('td');
+                td_daily_cases = document.createElement('td');
+                td_daily_deaths = document.createElement('td');
+                td_daily_recovered = document.createElement('td');
+
+                Node_dates = document.createTextNode(dates[i]);
+                Node_cases = document.createTextNode(parseInt(cases[i]).toLocaleString());
+                Node_deaths = document.createTextNode(parseInt(deaths[i]).toLocaleString());
+                Node_recovered = document.createTextNode(parseInt(recovered[i]).toLocaleString());
+                Node_daily_cases = document.createTextNode(parseInt(new_response[i]["dailyconfirmed"]).toLocaleString());
+                Node_daily_deaths = document.createTextNode(parseInt(new_response[i]["dailydeceased"]).toLocaleString());
+                Node_daily_recovered = document.createTextNode(parseInt(new_response[i]["dailyrecovered"]).toLocaleString());
+
+                td_dates.appendChild(Node_dates)
+                td_cases.appendChild(Node_cases)
+                td_deaths.appendChild(Node_deaths)
+                td_recovered.appendChild(Node_recovered)
+                td_daily_cases.appendChild(Node_daily_cases)
+                td_daily_deaths.appendChild(Node_daily_deaths)
+                td_daily_recovered.appendChild(Node_daily_recovered)
+
+                tr.appendChild(td_dates)
+                tr.appendChild(td_cases)
+                tr.appendChild(td_deaths)
+                tr.appendChild(td_recovered)
+                tr.appendChild(td_daily_cases)
+                tr.appendChild(td_daily_deaths)
+                tr.appendChild(td_daily_recovered)
+
+                tbody.appendChild(tr)
+            }
+            table.appendChild(tbody)
+
+            Highcharts.chart('india_container_line', {
+                chart: {
+                    borderWidth: 0,
+                    borderRadius: 25
+                },
+                title: {
+                    text: 'India Cumulative Confirmed Coronavirus Cases/Deaths/Recovered'
+                },
+
+                subtitle: {
+                    text: 'Source: <a href="https://www.covid19india.org/">Covid19India</a>'
+                },
+
+                yAxis: {
+                    title: {
+                        text: 'Confirmed Cases/Deaths/Recovered'
+                    }
+                },
+
+                xAxis: {
+                    categories: dates
+                },
+
+                legend: {
+                    layout: 'vertical',
+                    align: 'right',
+                    verticalAlign: 'middle'
+                },
+
+                series: [{
+                    name: 'Cases',
+                    data: cases
+                }, {
+                    name: 'Deaths',
+                    data: deaths
+                }, {
+                    name: 'Recovered',
+                    data: recovered
+                }],
+
+                responsive: {
+                    rules: [{
+                        condition: {
+                            maxWidth: 500
+                        },
+                        chartOptions: {
+                            legend: {
+                                layout: 'horizontal',
+                                align: 'center',
+                                verticalAlign: 'bottom'
+                            }
+                        }
+                    }]
+                }
+            });
+            Highcharts.setOptions({
+                lang: {
+                    thousandsSep: ','
+                }
+            });
+            $(document).ready(function() {
+                //Preloader
+                preloaderFadeOutTime = 700;
+
+                function hidePreloader() {
+                    var preloader = $('.spinner-wrapper');
+                    preloader.fadeOut(preloaderFadeOutTime);
+                }
+                hidePreloader();
+            });
+        }
+    })
+}
+india_covid19();
+</script>
+<style>
+nav{
+    animation: fadeInAnimation ease 4s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+    font-family: 'Autour One';
+    font-size: 10px;
+}
+body {
+    font-family: 'Inder';
+}
+#top_nav{
+    font-family: 'Inder';
+    font-size: 16px;
+    top: -2;
+    font-weight: bold;
+}
+#nav_element{
+    background-color: #e3f2fd;
+    border-radius: 10px;
+    padding: 10px;
+}
+#india_container_line{
+    height: 500px;
+    border-radius: 25px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,1);
+    background-color: white;
+}
+table {
+    text-align: left;
+    position: relative;
+    border-collapse: collapse;
+    background-color: #edeef5;
+    font-weight: bold;
+}
+th, td {
+    padding: 0.25rem;
+    text-align: center;
+}
+th {
+    background: white;
+    position: sticky;
+    top: 50;
+    box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.7);
+}
+@keyframes fadeInAnimation {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+.spinner {
+    width: 40px;
+    height: 40px;
+    background-color: #333;
+    position: absolute;
+    top: 48%;
+    left: 48%;
+    -webkit-animation: sk-rotateplane 1.2s infinite ease-in-out;
+    animation: sk-rotateplane 1.2s infinite ease-in-out;
+}
+.spinner-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ff6347;
+    z-index: 999999;
+}
+@-webkit-keyframes sk-rotateplane {
+    0% {
+        -webkit-transform: perspective(120px) 
+}
+    50% {
+        -webkit-transform: perspective(120px) rotateY(180deg) 
+}
+    100% {
+        -webkit-transform: perspective(120px) rotateY(180deg) rotateX(180deg) 
+}
+}
+@keyframes sk-rotateplane {
+    0% {
+        transform: perspective(120px) rotateX(0deg) rotateY(0deg);
+        -webkit-transform: perspective(120px) rotateX(0deg) rotateY(0deg)
+}
+    50% {
+        transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg);
+        -webkit-transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg)
+}
+    100% {
+        transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
+        -webkit-transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
+    }
+}
+#header-nav, #nav_element, th, .navbar-toggler{
+background: rgb(149,207,249);
+background: -moz-linear-gradient(top,  rgba(149,207,249,1) 0%, rgba(123,237,225,1) 52%, rgba(118,240,193,1) 100%);
+background: -webkit-linear-gradient(top,  rgba(149,207,249,1) 0%,rgba(123,237,225,1) 52%,rgba(118,240,193,1) 100%);
+background: linear-gradient(to bottom,  rgba(149,207,249,1) 0%,rgba(123,237,225,1) 52%,rgba(118,240,193,1) 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#95cff9', endColorstr='#76f0c1',GradientType=0 );
+background-size: 350% 350%;
+animation: waveColors 5s ease infinite;
+}
+@-webkit-keyframes waveColors {
+  0% {
+    background-position: 0% 7%;
+  }
+  50% {
+    background-position: 100% 94%;
+  }
+  100% {
+    background-position: 0% 7%;
+  }
+}
+@keyframes waveColors {
+  0% {
+    background-position: 0% 7%;
+  }
+  50% {
+    background-position: 100% 94%;
+  }
+  100% {
+    background-position: 0% 7%;
+  }
+}
+</style>
