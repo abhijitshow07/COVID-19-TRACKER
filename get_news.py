@@ -81,8 +81,8 @@ def global_news():
     with open('json_data/news_world.json') as file:
         news = json.load(file)
         
-    with open('json_data/world_news_audio_locations.json') as file:
-        audio_locations = json.load(file)
+    # with open('json_data/world_news_audio_locations.json') as file:
+    #     audio_locations = json.load(file)
         
     global_news_list = []
     for i in news["articles"]:
@@ -90,14 +90,15 @@ def global_news():
                                  "title":i["title"],"description":i["description"],
                                  "image_url":i["urlToImage"],"url":i["url"]})
 
-    return global_news_list + [{"audio_locations":list(audio_locations)}]
+    # return global_news_list + [{"audio_locations":list(audio_locations)}]
+    return global_news_list
     
 def india_news():
     with open('json_data/news_india.json') as file:
         news = json.load(file)
         
-    with open('json_data/india_news_audio_locations.json') as file:
-        audio_locations = json.load(file)
+    # with open('json_data/india_news_audio_locations.json') as file:
+    #     audio_locations = json.load(file)
         
     india_news_list = []
     for i in news["articles"]:
@@ -105,6 +106,7 @@ def india_news():
                                 "title":i["title"],"description":i["description"],
                                 "image_url":i["urlToImage"],"url":i["url"]})
 
-    return india_news_list + [{"audio_locations":list(audio_locations)}]
+    # return india_news_list + [{"audio_locations":list(audio_locations)}]
+    return india_news_list
 
 #news_audio_save()
