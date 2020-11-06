@@ -122,24 +122,24 @@ function global_news() {
 
                 div_audio = document.createElement('div');
 
-                audio = document.createElement('audio');
-                audio.id = "audio_" + i.toString();
-                audio.src = response[response.length-1]["audio_locations"][i]
-                div_audio.appendChild(audio)
+                // audio = document.createElement('audio');
+                // audio.id = "audio_" + i.toString();
+                // audio.src = response[response.length-1]["audio_locations"][i]
+                // div_audio.appendChild(audio)
 
-                a = document.createElement('a');
-                a.setAttribute("onclick","document.getElementById('" + 'audio_' + i.toString() + "').play()");
-                a.style="cursor: pointer;"
+                // a = document.createElement('a');
+                // a.setAttribute("onclick","document.getElementById('" + 'audio_' + i.toString() + "').play()");
+                // a.style="cursor: pointer;"
 
-                fontaws = document.createElement('i');
-                fontaws.setAttribute("class","fas fa-volume-up fa-2x");
-                text = document.createElement('h6');
-                text.innerHTML = "Tap Here";
-                div_audio.appendChild(text)
-                a.appendChild(fontaws)
-                div_audio.appendChild(a)
+                // fontaws = document.createElement('i');
+                // fontaws.setAttribute("class","fas fa-volume-up fa-2x");
+                // text = document.createElement('h6');
+                // text.innerHTML = "Tap Here";
+                // div_audio.appendChild(text)
+                // a.appendChild(fontaws)
+                // div_audio.appendChild(a)
 
-                div.appendChild(div_audio)
+                // div.appendChild(div_audio)
 
                 br = document.createElement('br');
                 div.appendChild(br)

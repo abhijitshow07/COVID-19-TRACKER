@@ -7,7 +7,7 @@ Created on Fri Apr 24 12:28:04 2020
 
 
 from newsapi import NewsApiClient
-from gtts import gTTS
+# from gtts import gTTS
 import json
 import re
 from configparser import ConfigParser
@@ -24,52 +24,52 @@ def news_audio_save():
     top_headlines_world = newsapi.get_top_headlines(q='coronavirus', language='en')
     top_headlines_india = newsapi.get_top_headlines(q='coronavirus', language='en', country='in')
 
-    world_audio_locations = []
-    count = 0
-    for i in top_headlines_world["articles"]:
-        count = count + 1
-        language = 'en'
-        name = re.split(',|-|:|\+|\.', i['publishedAt'])
-        string = str(count) + '_'
-        for j in name:
-            string = string + j + str(top_headlines_world['totalResults'])
+    # world_audio_locations = []
+    # count = 0
+    # for i in top_headlines_world["articles"]:
+    #     count = count + 1
+    #     language = 'en'
+    #     name = re.split(',|-|:|\+|\.', i['publishedAt'])
+    #     string = str(count) + '_'
+    #     for j in name:
+    #         string = string + j + str(top_headlines_world['totalResults'])
             
-        if i["description"] == None:
-            myobj = gTTS(text="Sorry no description of the news was available.", lang=language, slow=False)
-            location = "static/audio/world_news_audio/audio_"+string+".mp3"
-            myobj.save(location)
-        else:
-            myobj = gTTS(text=i["description"]+". by "+i["source"]["name"], lang=language, slow=False)
-            location = "static/audio/world_news_audio/audio_"+string+".mp3"
-            myobj.save(location)
+    #     if i["description"] == None:
+    #         myobj = gTTS(text="Sorry no description of the news was available.", lang=language, slow=False)
+    #         location = "static/audio/world_news_audio/audio_"+string+".mp3"
+    #         myobj.save(location)
+    #     else:
+    #         myobj = gTTS(text=i["description"]+". by "+i["source"]["name"], lang=language, slow=False)
+    #         location = "static/audio/world_news_audio/audio_"+string+".mp3"
+    #         myobj.save(location)
         
-        world_audio_locations = world_audio_locations + [location]
+    #     world_audio_locations = world_audio_locations + [location]
         
-    with open('json_data/world_news_audio_locations.json', 'w') as json_file:
-        json.dump(world_audio_locations, json_file)
+    # with open('json_data/world_news_audio_locations.json', 'w') as json_file:
+    #     json.dump(world_audio_locations, json_file)
             
-    india_audio_locations = []
-    count = 0
-    for i in top_headlines_india["articles"]:
-        count = count + 1
-        language = 'en'
-        name = re.split(',|-|:|\+|\.', i['publishedAt'])
-        string = str(count) + '_'
-        for j in name:
-            string = string + j + str(top_headlines_india['totalResults'])
-        if i["description"] == None:
-            myobj = gTTS(text="Sorry no description of the news was available.", lang=language, slow=False)
-            location = "static/audio/india_news_audio/audio_"+string+".mp3"
-            myobj.save(location)
-        else:
-            myobj = gTTS(text=i["description"]+". by "+i["source"]["name"], lang=language, slow=False)
-            location = "static/audio/india_news_audio/audio_"+string+".mp3"
-            myobj.save(location)
+    # india_audio_locations = []
+    # count = 0
+    # for i in top_headlines_india["articles"]:
+    #     count = count + 1
+    #     language = 'en'
+    #     name = re.split(',|-|:|\+|\.', i['publishedAt'])
+    #     string = str(count) + '_'
+    #     for j in name:
+    #         string = string + j + str(top_headlines_india['totalResults'])
+    #     if i["description"] == None:
+    #         myobj = gTTS(text="Sorry no description of the news was available.", lang=language, slow=False)
+    #         location = "static/audio/india_news_audio/audio_"+string+".mp3"
+    #         myobj.save(location)
+    #     else:
+    #         myobj = gTTS(text=i["description"]+". by "+i["source"]["name"], lang=language, slow=False)
+    #         location = "static/audio/india_news_audio/audio_"+string+".mp3"
+    #         myobj.save(location)
         
-        india_audio_locations = india_audio_locations + [location]
+    #     india_audio_locations = india_audio_locations + [location]
         
-    with open('json_data/india_news_audio_locations.json', 'w') as json_file:
-        json.dump(india_audio_locations, json_file)
+    # with open('json_data/india_news_audio_locations.json', 'w') as json_file:
+    #     json.dump(india_audio_locations, json_file)
     
     with open('json_data/news_world.json', 'w') as json_file:
         json.dump(top_headlines_world, json_file)
