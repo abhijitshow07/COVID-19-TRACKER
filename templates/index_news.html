@@ -95,7 +95,7 @@ function global_news() {
         success: function(response) {
             console.log(response);
             div_news = document.getElementById('global_news');
-            for (i = 0; i < response.length-1 ; i++) {
+            for (i = 0; i < response.length ; i++) {
                 div = document.createElement('div');
                 div.class = "card";
                 div.id = "news"
@@ -120,7 +120,7 @@ function global_news() {
                 description.id = "description"
                 div.appendChild(description)
 
-                div_audio = document.createElement('div');
+                // div_audio = document.createElement('div');
 
                 // audio = document.createElement('audio');
                 // audio.id = "audio_" + i.toString();

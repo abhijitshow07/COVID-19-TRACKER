@@ -76,7 +76,7 @@
 </div>
 
 <br>
-<div class="container" id="global_news" align="center"></div>
+<div class="container" id="india_news" align="center"></div>
 <div class="container" align="center">
 	<h4>Powered By <a href="https://newsapi.org/" target="_blank">News API</a></h4>
 </div>
@@ -93,8 +93,8 @@ $.ajax({
         cache: false,
         success: function(response) {
         console.log(response);
-        div_news = document.getElementById('global_news')
-        for(i = 0 ; i < response.length-1 ; i++)
+        div_news = document.getElementById('india_news')
+        for(i = 0 ; i < response.length ; i++)
         {
           div = document.createElement('div');
           div.class = "card";
@@ -112,6 +112,7 @@ $.ajax({
             image.style.width = "67%";
             image.style.height = "auto";
             image.id = "news_image"
+            image.alt = "Image"
             div.appendChild(image)
           }
 
