@@ -24,7 +24,7 @@ def get_time_series():
     dates = list(hist_data[0]['timeline']['cases'].keys())
     
     data_sequence = []
-    for i in dates[::2]:
+    for i in dates[::7]:
         data = []
         date_split = i.split('/')
         new_date = date_split[1]+ ' '+ calendar.month_abbr[int(date_split[0])] + ' 20'+ date_split[2]
