@@ -10,7 +10,7 @@ import tweepy
 import re
 from textblob import TextBlob
 import pandas as pd
-from wordcloud import WordCloud
+from wordcloud import WordCloud, STOPWORDS
 import time
 from configparser import ConfigParser
 
@@ -64,8 +64,12 @@ def tweet():
     
     # Join the different processed titles together.
     long_string = ','.join(list(papers['paper_text_processed'].values))
+
+    #Create set of Stopwords
+    stopwords = set(STOPWORDS)
+
     # Create a WordCloud object
-    word_cloud = WordCloud(background_color="white", max_words=5000, contour_width=3, 
+    word_cloud = WordCloud(stopwords=stopwords, background_color="white", max_words=5000, contour_width=3, 
                            contour_color='steelblue',width = 1000,height = 600)
     # Generate a word cloud
     word_cloud.generate(long_string)
@@ -125,8 +129,12 @@ def india_tweet():
     
     # Join the different processed titles together.
     long_string = ','.join(list(papers['paper_text_processed'].values))
+
+    #Create set of Stopwords
+    stopwords = set(STOPWORDS)
+
     # Create a WordCloud object
-    word_cloud = WordCloud(background_color="white", max_words=5000, contour_width=3, 
+    word_cloud = WordCloud(stopwords=stopwords, background_color="white", max_words=5000, contour_width=3, 
                            contour_color='steelblue',width = 1000,height = 600)
     # Generate a word cloud
     word_cloud.generate(long_string)
