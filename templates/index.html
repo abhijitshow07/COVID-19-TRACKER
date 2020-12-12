@@ -104,7 +104,7 @@ function covid19() {
             console.log(response);
             header = ["Country / Other", "Total Cases", "New Cases", "Active Cases", "Cases/ 1M pop", 
             "Total Deaths","New Deaths", "Deaths/ 1M pop", "Total Recovered","Recovered/ 1M pop",
-            "Serious /Critical", "Tests", "Tests /1M pop"
+            "Serious /Critical", "Tests"
             ];
 
             document.getElementById('cases').innerHTML = "<i id='icon' class='fas fa-virus'></i> Coronavirus Cases: " + response["cases"].toLocaleString();
@@ -129,7 +129,7 @@ function covid19() {
 
             keys = ["country","cases","todayCases","active","casesPerOneMillion","deaths","todayDeaths",
                     "deathsPerOneMillion","recovered","recoveredPerOneMillion","critical",
-                    "tests","testsPerOneMillion"]
+                    "tests"]
             values = []
             for (let i = 0 ; i < keys.length ; i++){
                 values.push(response[keys[i]])
