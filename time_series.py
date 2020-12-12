@@ -29,12 +29,13 @@ def get_time_series():
         date_split = i.split('/')
         new_date = date_split[1]+ ' '+ calendar.month_abbr[int(date_split[0])] + ' 20'+ date_split[2]
         for j in range(len(hist_data)):
-            if list(hist_data[j].keys())[0] != 'message':
-                if hist_data[j]["timeline"]["cases"][i] != 0:
-                    data.append({"code3":live_data[j]["countryInfo"]["iso3"],
-                                 "code":live_data[j]["countryInfo"]["iso2"],
-                                 "name":live_data[j]["country"],
-                                 "value":hist_data[j]["timeline"]["cases"][i]})
+            # if list(hist_data[j].keys())[0] != 'message':
+            if hist_data[j] != None and hist_data[j]["timeline"]["cases"][i] != 0:
+                # if hist_data[j]["timeline"]["cases"][i] != 0:
+                data.append({"code3":live_data[j]["countryInfo"]["iso3"],
+                                "code":live_data[j]["countryInfo"]["iso2"],
+                                "name":live_data[j]["country"],
+                                "value":hist_data[j]["timeline"]["cases"][i]})
         data_sequence.append({"name":new_date,"data":data})
         
     with open('json_data/world_time_series.json', 'w') as json_file:
