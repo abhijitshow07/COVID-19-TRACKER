@@ -12,6 +12,7 @@ import twitter
 import get_news
 import world
 import time_series
+import os
 
 app = Flask(__name__)
 
@@ -137,6 +138,10 @@ def get_india_predictions():
 @app.route('/update_india_world_pred')
 @cross_origin()
 def update_india_world_pred():
+    mydir = "static/img/plot/"
+    filelist = [ f for f in os.listdir(mydir)]
+    for f in filelist:
+        os.remove(os.path.join(mydir, f))
     world.india_world_pred()
     return jsonify("UPDATED")
     
@@ -162,5 +167,5 @@ def read_world_time_series():
     return jsonify(world_time_series)
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0' , port=5000 ,threaded=True)
+    app.run(host='0.0.0.0' , port=5000 , threaded=True)
     #app.run(debug=True, port=5000 , use_reloader=False)  
