@@ -13,9 +13,13 @@ import pandas as pd
 from wordcloud import WordCloud, STOPWORDS
 import time
 from configparser import ConfigParser
-
+import os
 
 def tweet():
+
+    #clear the contents of wordcloud folder
+    clear_folder()
+
     #Read config.ini file
     config_object = ConfigParser()
     config_object.read("config.ini")
@@ -80,6 +84,9 @@ def tweet():
     return [{"image_location":location}] + tweets_list
 
 def india_tweet():
+    #clear the contents of wordcloud folder
+    clear_folder()
+
     #Read config.ini file
     config_object = ConfigParser()
     config_object.read("config.ini")
@@ -144,5 +151,11 @@ def india_tweet():
         
     return [{"image_location":location}] + tweets_list
 
+def clear_folder():
+    mydir = "static/img/wordcloud/"
+    filelist = [ f for f in os.listdir(mydir)]
+    for f in filelist:
+        os.remove(os.path.join(mydir, f))
+
 # tweet()
-# india_tweet()
+india_tweet()
