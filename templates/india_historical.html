@@ -55,7 +55,7 @@
       <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div class="navbar-nav container">
             <a class="nav-item nav-link"  href="/" >Home</a>
-            <a class="nav-item nav-link"  href="/india" target="_blank">India Tracker</a>
+            <a class="nav-item nav-link"  href="/india">India Tracker</a>
             <a class="nav-item nav-link"  href="/india_graph">Graphs</a>
             <a class="nav-item nav-link"  href="/india_sentiment">Sentiment Analysis</a>
             <a class="nav-item nav-link"  href="/india_news">News</a>
@@ -125,7 +125,7 @@
                 cases.push(parseInt(new_response[i]["totalconfirmed"]))
                 deaths.push(parseInt(new_response[i]["totaldeceased"]))
                 recovered.push(parseInt(new_response[i]["totalrecovered"]))
-                dates.push(new_response[i]["date"]+"2020")
+                dates.push(new_response[i]["date"])
 
                 tr = document.createElement('tr');
 
