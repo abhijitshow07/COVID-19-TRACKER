@@ -488,48 +488,26 @@ def india_fitted():
     return final_dict
 
 def india_daily_cumulative():
+    statewise_daily = pd.read_csv("https://api.covid19india.org/csv/latest/state_wise_daily.csv")
+    
+    statewise_daily = statewise_daily.loc[statewise_daily["Status"] == 'Confirmed']
+    statewise_daily.drop(['Date_YMD','TT','Status'], axis=1, inplace = True)
+    statewise_daily.set_index(keys = "Date", inplace = True)
+    
+    statewise_daily = statewise_daily.cumsum()
+    
     response = requests.get("https://api.covid19india.org/data.json")
     live = json.loads(response.text)
+    state_codes={}
+    for i in live["statewise"][1:]:
+        state_codes[i['statecode']] = i['state']
+    statewise_daily.rename(columns = state_codes, inplace = True)
     
-    state_codes = []
-    for i in live["statewise"]:
-        if i["state"] != "Total" and i["state"] != "State Unassigned":
-    #         state_codes[i["statecode"].lower()] = i["state"]
-            state_codes.append({i["statecode"].lower() : i["state"]})
+    statewise_daily = statewise_daily.T
+    statewise_daily.index.names = ['states']
+    
+    statewise_daily.to_csv('data/india_cumulative_cases.csv')
 
-    response = requests.get("https://api.covid19india.org/states_daily.json")
-    daily = json.loads(response.text)
     
-    dates = {"states":[]}
-    for i in daily["states_daily"]:
-        if i["status"] == "Confirmed":
-            dates[i["date"]] = []
-    
-    for i in daily["states_daily"]:
-        for j in state_codes:
-            if i["status"] == "Confirmed":
-                if i[list(j.keys())[0]] != '':
-                    dates[i["date"]].append(i[list(j.keys())[0]])
-                else:
-                    dates[i["date"]].append('0')
-    for i in state_codes:
-        dates["states"].append(list(i.values())[0])
-        
-    india_daily_cases = pd.DataFrame(dates)
-    
-    india_daily_cases.to_csv('data/india_daily_cases.csv')
-    india_cumsum = pd.read_csv('data/india_daily_cases.csv')
-    india_cumsum.drop(columns=['Unnamed: 0'],inplace=True)
-    
-    for i in range(len(india_cumsum)):
-        state = india_cumsum.iloc[i,0]
-        india_cumsum.iloc[i] = india_cumsum.iloc[i][1:].cumsum()
-        india_cumsum.iloc[i,0] = state
-        
-    dates = ["states"]
-    for i in india_cumsum.columns[1:]:
-        date_split = i.split("-")
-        dates.append(date_split[0]+' '+ date_split[1] +' 20'+ date_split[2])
-        
-    india_cumsum.columns = dates
-    india_cumsum.to_csv('data/india_cumulative_cases.csv')
+# https://api.covid19india.org/data.json
+# https://api.covid19india.org/states_daily.json
